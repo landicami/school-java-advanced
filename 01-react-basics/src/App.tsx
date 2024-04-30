@@ -21,6 +21,7 @@ function App() {
 	])
 
 	const [salary, setSalary] = useState(10);
+	let adjustedSalary = salary < 5 ? 5 : salary;
 
 
 	const handleBtnClick = () => {
@@ -28,6 +29,7 @@ function App() {
     setCounter(counter + 1 )
 		console.log("Counter is now:", counter);
 	}
+
 
 	return (
 	<div className="container">
@@ -46,7 +48,11 @@ function App() {
     	<button onClick={() => setMsg("Hi dad!")} className="btn btn-warning">Hi dad?</button>
 		<hr />
 
-		<p>Salary per hour: {salary} &euro;</p>
+		<p>Salary per hour: {adjustedSalary} &euro;</p>
+		{adjustedSalary < 10 && (
+		<p>Salary is too low.</p>
+		)}
+
 
 		<div className="buttons">
 			<div className="mb-1">
@@ -60,7 +66,7 @@ function App() {
 			</div>
 		</div>
 
-<hr />
+		<hr />
     </div>
 
 
@@ -69,3 +75,14 @@ function App() {
 }
 
 export default App;
+
+
+/**
+ * Johans lösning under
+ * const handleChangeSalary = (amount: number) => {
+		if (salary + amount > 5) {
+			return;
+		}
+		setSalary(salary + amount);
+	}
+ */
