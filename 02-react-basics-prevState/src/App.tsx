@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import "./App.css";
 
 interface Post {
@@ -16,12 +16,16 @@ function App() {
 		{ id: 3, title: "Got state?", likes: 3 },
 	]);
 	const [salary, setSalary] = useState(10);
+	const [showSalary, setShowSalary] = useState(false); //använda detta för att kunna visa och dölja divar genom react
 
 	console.log("App is being rendered");
+	console.log("Counter on render:", counter);
 
+
+	//vi vill uppdatera counter när den appen har renderats
 	const handleBtnClick = () => {
 		console.log("Counter before update:", counter);
-		setCounter(counter + 1);
+		setCounter( (prevCounter) => { return prevCounter + 1});
 		console.log("Counter after update:", counter);
 	}
 
@@ -46,6 +50,21 @@ function App() {
 
 			<hr />
 
+			{/* <button onClick={() => setShowSalary(true)} className="btn btn-primary">Show salary</button>
+			<button onClick={() => setShowSalary(false)} className="btn btn-primary">Hide salary</button> */}
+
+			<button onClick={() => setShowSalary(!showSalary)} className="btn btn-primary">
+				{showSalary ? "Hide salary" : "Show salary"}
+				</button>
+
+			{/*
+			<button onClick={() => setShowSalary(!showSalary)} className={!showSalary ? "btn btn-warning" : "btn btn-danger"}>
+			{!showSalary ? "Show salary" : "Hide salary"}
+			</button>
+ */}
+
+			{showSalary && (
+			<React.Fragment>
 			<p>Salary per hour: {salary} &euro;</p>
 
 			{salary < 10 && <div className="alert alert-warning">You might want to change job?</div>}
@@ -75,6 +94,8 @@ function App() {
 			</div>
 
 			<hr />
+			</React.Fragment>
+			)}
 
 			<h2>Posts</h2>
 
