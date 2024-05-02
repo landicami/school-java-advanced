@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import "./App.css";
 import Counter from "./components/counter";
+import Salary from "./components/Salary";
 
 interface Post {
 	id: number;
@@ -15,22 +16,18 @@ function App() {
 		{ id: 2, title: "JSX Rocks Even Moar!", likes: 42 },
 		{ id: 3, title: "Got state?", likes: 3 },
 	]);
-	const [salary, setSalary] = useState(10);
 	const [showSalary, setShowSalary] = useState(false); //använda detta för att kunna visa och dölja divar genom react
 
+
+	//State för form
+	const [inputPostTitle, setInputPostTitle] = useState("");
 	console.log("App is being rendered");
 
 
 	//vi vill uppdatera counter när den appen har renderats
 
 
-	const handleChangeSalary = (amount: number) => {
-		if (salary + amount < 5) {
-			setSalary(5);
-			return;
-		}
-		setSalary(salary + amount);
-	}
+
 
 	const handleAddLike = (post: Post) => {
 		console.log("post me likes", post) //loggar det specifika objektet jag trycker på
@@ -46,6 +43,19 @@ function App() {
 
 	}
 
+	const handleFormSubmit = (e: React.FormEvent) => {
+		e.preventDefault()
+		const newPost: Post = {
+			title: inputPostTitle,
+			likes: 0,
+			id: Math.max(...posts.map(post => post.id)) +1
+		}
+		setPosts([...posts, newPost]);
+		//clear inputfield
+		setInputPostTitle("");
+		console.log(posts);
+	}
+
 	return (
 		<div className="container">
 			<h1>01-react-basics</h1>
@@ -57,7 +67,6 @@ function App() {
 			<hr />
 			<Counter />
 			<hr />
-			<Counter />
 
 			{/* <button onClick={() => setShowSalary(true)} className="btn btn-primary">Show salary</button>
 			<button onClick={() => setShowSalary(false)} className="btn btn-primary">Hide salary</button> */}
@@ -72,53 +81,42 @@ function App() {
 			</button>
  */}
 
-			{showSalary && (
-			<React.Fragment>
-			<p>Salary per hour: {salary} &euro;</p>
-
-			{salary < 10 && <div className="alert alert-warning">You might want to change job?</div>}
-
-			<div className="buttons">
-				<div className="mb-1">
-					<button
-						className="btn btn-primary btn-lg"
-						onClick={() => handleChangeSalary(1)}
-					>Raise 1 &euro; 🤑</button>
-					<button
-						className="btn btn-warning btn-lg"
-						onClick={() => handleChangeSalary(-1)}
-					>Decrease 1 &euro; 😢</button>
-				</div>
-
-				<div className="mb-1">
-					<button
-						className="btn btn-success btn-lg"
-						onClick={() => handleChangeSalary(5)}
-					>Raise 5 &euro; 🤑🤑🤑</button>
-					<button
-						className="btn btn-danger btn-lg"
-						onClick={() => handleChangeSalary(-5)}
-					>Decrease 5 &euro; 😢😢😢</button>
-				</div>
-			</div>
-
+			{showSalary && <Salary />}
 			<hr />
-			</React.Fragment>
-			)}
 
-			{posts.length > 0 && <>
+			{posts.length > 0 &&
+			<>
 			<h2>Posts</h2>
+
+			<form onSubmit={handleFormSubmit} className="mb-3" >
+				<div className="input-group">
+					<input
+						aria-label="Post title"
+						className="form-control"
+						placeholder="Fun with Forms"
+						required
+						type="text"
+						onChange={(e)=> {setInputPostTitle(e.target.value)}}
+						value={inputPostTitle}
+					/>
+
+					<button
+						type="submit"
+						className="btn btn-success"
+					>Create</button>
+				</div>
+			</form>
 
 			<ul>
 				{posts.map(post =>
 					<li key={post.id}>
 						{post.title} ({post.likes} likes)
 						<button
-							className="btn btn-success btn-sm ms-1"
+							className="btn btn-primary btn-sm ms-1"
 							onClick={() => handleAddLike(post)}
 						>❤️</button>
 						<button
-							className="btn btn-danger btn-sm ms-1"
+							className="btn btn-warning btn-sm ms-1"
 							onClick={() => handleDeletePost(post)}
 						>🗑️</button>
 					</li>
