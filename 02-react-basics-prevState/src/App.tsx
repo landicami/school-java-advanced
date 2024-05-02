@@ -37,6 +37,20 @@ function App() {
 		setSalary(salary + amount);
 	}
 
+	const handleAddLike = (post: Post) => {
+		console.log("post me likes", post) //loggar det specifika objektet jag trycker på
+		post.likes++ //adderar likes
+		setPosts([...posts])
+	}
+
+	const handleDeletePost = (postToDelete: Post) => {
+		//ändra inte en stateful variabel
+		// posts.splice(posts.indexOf(postToDelete), 1);
+		setPosts(posts.filter(post => post !== postToDelete))
+		console.log(posts);
+
+	}
+
 	return (
 		<div className="container">
 			<h1>01-react-basics</h1>
@@ -97,13 +111,26 @@ function App() {
 			</React.Fragment>
 			)}
 
+			{posts.length > 0 && <>
 			<h2>Posts</h2>
 
 			<ul>
 				{posts.map(post =>
-					<li key={post.id}>{post.title} ({post.likes} likes)</li>
+					<li key={post.id}>
+						{post.title} ({post.likes} likes)
+						<button
+							className="btn btn-success btn-sm ms-1"
+							onClick={() => handleAddLike(post)}
+						>❤️</button>
+						<button
+							className="btn btn-danger btn-sm ms-1"
+							onClick={() => handleDeletePost(post)}
+						>🗑️</button>
+					</li>
 				)}
 			</ul>
+			</> }
+
 		</div>
 	);
 }
