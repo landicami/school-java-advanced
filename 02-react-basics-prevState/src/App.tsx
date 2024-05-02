@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import "./App.css";
+import Counter from "./components/counter";
 
 interface Post {
 	id: number;
@@ -8,7 +9,6 @@ interface Post {
 }
 
 function App() {
-	const [counter, setCounter] = useState(1);
 	const [msg, setMsg] = useState("Hi mom!");
 	const [posts, setPosts] = useState<Post[]>([
 		{ id: 1, title: "React Rocks!", likes: 1337 },
@@ -19,15 +19,10 @@ function App() {
 	const [showSalary, setShowSalary] = useState(false); //använda detta för att kunna visa och dölja divar genom react
 
 	console.log("App is being rendered");
-	console.log("Counter on render:", counter);
 
 
 	//vi vill uppdatera counter när den appen har renderats
-	const handleBtnClick = () => {
-		console.log("Counter before update:", counter);
-		setCounter( (prevCounter) => { return prevCounter + 1});
-		console.log("Counter after update:", counter);
-	}
+
 
 	const handleChangeSalary = (amount: number) => {
 		if (salary + amount < 5) {
@@ -57,12 +52,12 @@ function App() {
 
 			<p>{msg}</p>
 
-			<p>Counter: {counter}</p>
-
-			<button onClick={handleBtnClick} className="btn btn-success">Click me</button>
 			<button onClick={() => setMsg("Hi dad!")} className="btn btn-warning">Hi dad?</button>
 
 			<hr />
+			<Counter />
+			<hr />
+			<Counter />
 
 			{/* <button onClick={() => setShowSalary(true)} className="btn btn-primary">Show salary</button>
 			<button onClick={() => setShowSalary(false)} className="btn btn-primary">Hide salary</button> */}
