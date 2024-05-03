@@ -1,5 +1,6 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import "./App.css";
+import TodoListItem from './components/TodoListItem';
 //VARJE GÅNG EN STATEUPPDATERING SKER GÖRS EN OMRENDERING
 
 interface Todo {
@@ -30,7 +31,6 @@ function App() {
 
   const handleTodoClick = (todo: Todo) => {
 	todo.completed = !todo.completed;
-	console.log(todo);
 	setTodos([...todos]);
 
   }
@@ -43,65 +43,22 @@ function App() {
   }
 
   const notCompletedinlist = todos.filter(todo => !todo.completed);
-  const completedinList = todos.filter(todo => todo.completed);
 
+//   document.title = `${notCompletedinlist.length} unfinished`;
+//   console.log("Document updated")
+console.log("rendering")
+
+  useEffect(() => {
+	// This code will only be executed **AFTER the component has rendered
+	console.log("im on the other side")
+  }, [notCompletedinlist.length]);
+
+  console.log("after side effect")
 
 
   return (
     <div className="container">
 		<h1>I will always todo you</h1>
-
-		{todos.length === 0 &&
-		<p>The todos are none
-			</p>
-			}
-		{todos.length > 0 &&
-		<>
-		<h2>There are this many todos: {todos.length}</h2>
-		<h3>{completedTodos.length} är avklarade</h3>
-		<ul className='mt-5'>
-			<h4>Not Completed</h4>
-			{notCompletedinlist.map(todo =>
-				<li
-				className = {todo.completed ? "done" : ""}
-				key = {todo.id}
-				>
-
-				{todo.title}
-
-					<button
-					className='btn btn-warning btn-sm'
-					onClick={() => (handleTodoClick(todo))}>{todo.completed ? "Undone" : "Done"}</button>
-					<button
-							className="btn btn-warning btn-sm ms-1"
-							onClick={() => handleDeletedTodo(todo)}
-						>🗑️</button>
-
-				</li>
-			)}
-		</ul>
-		<ul className='mt-5'>
-		<h4>Completed</h4>
-
-			{completedinList.map(todo =>
-				<li
-				className = {todo.completed ? "done" : ""}
-				key = {todo.id}
-				>
-
-				{todo.title}
-
-					<button
-					className='btn btn-warning btn-sm'
-					onClick={() => (handleTodoClick(todo))}>{todo.completed ? "Undone" : "Done"}</button>
-					<button
-							className="btn btn-warning btn-sm ms-1"
-							onClick={() => handleDeletedTodo(todo)}
-						>🗑️</button>
-
-				</li>
-			)}
-		</ul>
 		<form onSubmit={handleTodoFromValue} className='mt-3'>
 			<div className='input-group'>
 				<input
@@ -116,7 +73,43 @@ function App() {
 				className='btn btn-primary'>Create a new todo</button>
 			</div>
 		</form>
-		</>
+
+		{todos.length === 0 &&
+		<p>The todos are none
+		</p>
+		}
+
+		{todos.length > 0 &&
+		<div className='row'>
+			<div className='col-6'>
+		<ul className='mt-5'>
+			<h4>Not Completed</h4>
+			{notCompletedinlist.map(todo =>
+				<TodoListItem
+					key={todo.id}
+					todo={todo}
+					onTodoClick={handleTodoClick}
+					onDeleteTodo={handleDeletedTodo}
+				/>
+			)}
+		</ul>
+		</div>
+		<div className='col-6'>
+		<ul className='mt-5'>
+		<h4>Completed</h4>
+			{completedTodos.map(todo =>
+				<TodoListItem
+					key={todo.id}
+					todo={todo}
+					onTodoClick={handleTodoClick}
+					onDeleteTodo={handleDeletedTodo}
+				/>
+			)}
+		</ul>
+		</div>
+		<h4>There are this many todos: {todos.length}</h4>
+		<h4>{completedTodos.length} är avklarade</h4>
+		</div>
 		}
     </div>
   )
