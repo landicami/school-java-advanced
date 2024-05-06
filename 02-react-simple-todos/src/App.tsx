@@ -4,6 +4,7 @@ import TodoListItem from './components/TodoListItem';
 import TodoCounter from './components/TodoCounter';
 import AddNewTodoForm from './components/AddNewTodoForm';
 import { Todo } from './types/Todo';
+import TodoList from './components/TodoList';
 //VARJE GÅNG EN STATEUPPDATERING SKER GÖRS EN OMRENDERING
 
 
@@ -72,30 +73,18 @@ console.log("rendering")
 		{todos.length > 0 &&
 		<div className='row'>
 			<div className='col-6'>
-				<ul className='mt-5'>
-					<h4>Gör detta!</h4>
-					{notCompletedinlist.map(todo =>
-						<TodoListItem
-							key={todo.id}
-							todo={todo}
-							onTodoClick={handleTodoClick}
-							onDeleteTodo={handleDeletedTodo}
-						/>
-					)}
-				</ul>
+				< TodoList
+				todos = {notCompletedinlist}
+				onTodoClick={handleTodoClick}
+				onDeleteTodo={handleDeletedTodo}
+
+				/>
 			</div>
 			<div className='col-6'>
-				<ul className='mt-5'>
-					<h4>Gjort!</h4>
-						{completedTodos.map(todo =>
-							<TodoListItem
-								key={todo.id}
-								todo={todo}
-								onTodoClick={handleTodoClick}
-								onDeleteTodo={handleDeletedTodo}
-							/>
-						)}
-				</ul>
+				<TodoList
+				todos={completedTodos}
+				onTodoClick={handleTodoClick}
+				onDeleteTodo={handleDeletedTodo}/>
 			</div>
 				<div>
 					<TodoCounter
