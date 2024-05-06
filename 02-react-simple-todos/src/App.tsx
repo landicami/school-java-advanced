@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react'
 import "./App.css";
 import TodoListItem from './components/TodoListItem';
+import TodoCounter from './components/TodoCounter';
+import AddNewTodoForm from './components/AddNewTodoForm';
 //VARJE GÅNG EN STATEUPPDATERING SKER GÖRS EN OMRENDERING
 
 interface Todo {
@@ -59,20 +61,11 @@ console.log("rendering")
   return (
     <div className="container">
 		<h1>I will always todo you</h1>
-		<form onSubmit={handleTodoFromValue} className='mt-3'>
-			<div className='input-group'>
-				<input
-					aria-label='Post todo'
-					placeholder='Todo me'
-					type="text"
-					className='form-control'
-					onChange={(e)=> {setInputTodo(e.target.value)}}
-					value={inputTodo}
-					/>
-				<button type='submit'
-				className='btn btn-primary'>Create a new todo</button>
-			</div>
-		</form>
+		<AddNewTodoForm
+		onTodoValue={handleTodoFromValue}
+		setInputTodo={setInputTodo}
+		inputTodo={inputTodo}
+		/>
 
 		{todos.length === 0 &&
 		<p>The todos are none
@@ -95,20 +88,23 @@ console.log("rendering")
 		</ul>
 		</div>
 		<div className='col-6'>
-		<ul className='mt-5'>
-		<h4>Completed</h4>
-			{completedTodos.map(todo =>
-				<TodoListItem
-					key={todo.id}
-					todo={todo}
-					onTodoClick={handleTodoClick}
-					onDeleteTodo={handleDeletedTodo}
-				/>
-			)}
-		</ul>
+			<ul className='mt-5'>
+				<h4>Completed</h4>
+					{completedTodos.map(todo =>
+						<TodoListItem
+							key={todo.id}
+							todo={todo}
+							onTodoClick={handleTodoClick}
+							onDeleteTodo={handleDeletedTodo}
+						/>
+					)}
+			</ul>
 		</div>
-		<h4>There are this many todos: {todos.length}</h4>
-		<h4>{completedTodos.length} är avklarade</h4>
+			<div>
+				<TodoCounter
+				todos={todos}
+				/>
+			</div>
 		</div>
 		}
     </div>
