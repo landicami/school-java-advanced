@@ -3,13 +3,10 @@ import "./App.css";
 import TodoListItem from './components/TodoListItem';
 import TodoCounter from './components/TodoCounter';
 import AddNewTodoForm from './components/AddNewTodoForm';
+import { Todo } from './types/Todo';
 //VARJE GÅNG EN STATEUPPDATERING SKER GÖRS EN OMRENDERING
 
-interface Todo {
-	id: number;
-	title: string;
-	completed: boolean;
-}
+
 
 function App() {
   const [todos, setTodos] = useState<Todo[]>([
@@ -61,11 +58,11 @@ console.log("rendering")
   return (
     <div className="container">
 		<h1>I will always todo you</h1>
-		<AddNewTodoForm
-		onTodoValue={handleTodoFromValue}
-		setInputTodo={setInputTodo}
-		inputTodo={inputTodo}
-		/>
+			<AddNewTodoForm
+			onTodoValue={handleTodoFromValue}
+			setInputTodo={setInputTodo}
+			inputTodo={inputTodo}
+			/>
 
 		{todos.length === 0 &&
 		<p>The todos are none
@@ -75,22 +72,9 @@ console.log("rendering")
 		{todos.length > 0 &&
 		<div className='row'>
 			<div className='col-6'>
-		<ul className='mt-5'>
-			<h4>Not Completed</h4>
-			{notCompletedinlist.map(todo =>
-				<TodoListItem
-					key={todo.id}
-					todo={todo}
-					onTodoClick={handleTodoClick}
-					onDeleteTodo={handleDeletedTodo}
-				/>
-			)}
-		</ul>
-		</div>
-		<div className='col-6'>
-			<ul className='mt-5'>
-				<h4>Completed</h4>
-					{completedTodos.map(todo =>
+				<ul className='mt-5'>
+					<h4>Gör detta!</h4>
+					{notCompletedinlist.map(todo =>
 						<TodoListItem
 							key={todo.id}
 							todo={todo}
@@ -98,14 +82,27 @@ console.log("rendering")
 							onDeleteTodo={handleDeletedTodo}
 						/>
 					)}
-			</ul>
-		</div>
-			<div>
-				<TodoCounter
-				todos={todos}
-				/>
+				</ul>
 			</div>
-		</div>
+			<div className='col-6'>
+				<ul className='mt-5'>
+					<h4>Gjort!</h4>
+						{completedTodos.map(todo =>
+							<TodoListItem
+								key={todo.id}
+								todo={todo}
+								onTodoClick={handleTodoClick}
+								onDeleteTodo={handleDeletedTodo}
+							/>
+						)}
+				</ul>
+			</div>
+				<div>
+					<TodoCounter
+					todos={todos}
+					/>
+				</div>
+			</div>
 		}
     </div>
   )
