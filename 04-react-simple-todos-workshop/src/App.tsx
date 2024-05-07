@@ -9,16 +9,43 @@ import "./assets/scss/App.scss";
 function App() {
 	const [todos, setTodos] = useState<Todo[]>([]);
 
-	const addTodo = (todo: Todo) => {
-		// FIX ME
+	const addTodo = async (todo: Todo) => {
+		try {
+		  const newTodo = await TodosAPI.addTodo(todo);
+
+		  // Uppdatera todos med den nya todo
+		  setTodos([...todos, newTodo.data]);
+		} catch (error) {
+		  // Hantera fel om det uppstår något vid läggning till todo
+		  console.error('Error adding todo:', error);
+		}
+	  }
+
+	const handleToggleTodo = async (todo: Todo) => {
+		try {
+			const updatedTodo = await TodosAPI.toggleTodo(todo);
+			console.log(updatedTodo.data);
+
+			setTodos(prevTodos => prevTodos.map(prevTodo => {
+			  if (prevTodo.id === updatedTodo.data.id) {
+				return updatedTodo.data;
+			  } else {
+				return prevTodo;
+			  }
+			}));
+		} catch (error) {
+			console.error("Error putting todo", error)
+		}
 	}
 
-	const handleToggleTodo = (todo: Todo) => {
-		// FIX ME
-	}
-
-	const handleDeleteTodo = (todo: Todo) => {
-		// FIX ME
+	const handleDeleteTodo = async (todo: Todo) => {
+		try {
+			await TodosAPI.deleteTodo(todo.id);
+			// Uppdatera todos-tillståndet genom att filtrera bort den todo med matchande id
+			setTodos(prevTodos => prevTodos.filter(toDo => toDo.id !== todo.id));
+		} catch(error){
+			console.error("Error deleting todo", error)
+		}
 	}
 
 	const finishedTodos = todos.filter(todo => todo.completed);

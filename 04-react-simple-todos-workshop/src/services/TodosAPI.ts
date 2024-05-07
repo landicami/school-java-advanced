@@ -19,6 +19,10 @@ export const getTodos = async () => {
  *
  * @param data Object with properties and values for the new todo
  */
+export const addTodo = async (todo: Todo) => {
+	const data = await axios.post<Todo>(BASE_URL + "/todos", todo);
+	return data;
+}
 
 /**
  * Update a todo
@@ -26,9 +30,25 @@ export const getTodos = async () => {
  * @param todo_id Todo to update
  * @param data Data to update todo with
  */
+export const toggleTodo = async (todo:Todo) => {
+	const data = await axios.patch<Todo>(`${BASE_URL}/todos/${todo.id}`, { completed: !todo.completed });
+	return data;
+}
+
+// export const toggleTodo = async (todo: Todo) => {
+// 	const data = await axios.patch<Todo>(`${BASE_URL}/todos/${todo.id}`, { completed: !todo.completed });
+// 	return data;
+//   }
+
+
 
 /**
  * Delete a todo
  *
  * @param todo_id Todo to delete
  */
+
+export const deleteTodo = async (todo_id: number) => {
+	const res = await axios.delete<Todo>(BASE_URL + `/todos/${todo_id}`)
+	return res.data
+}
