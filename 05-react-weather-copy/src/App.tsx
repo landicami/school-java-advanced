@@ -9,34 +9,9 @@ import SearchCity from "./components/SearchCity";
 
 
 function App() {
+	const [weather, setWeather] = useState<WeatherReport | null >(null);
 
-	function createEmptyWeatherReport(): WeatherReport {
-		return {
-		  dt: 0,
-		  main: {
-			feels_like: 0,
-			humidity: 0,
-			temp: 0,
-		  },
-		  name: "Search",
-		  sys: {
-			country: "??",
-			sunrise: 0,
-			sunset: 0,
-		  },
-		  weather: [],
-		  wind: {
-			deg: 0,
-			gust: 0,
-			speed: 0,
-		  },
-		};
-	  }
-
-	  // Använd createEmptyWeatherReport() för att initiera useState
-	  const [weather, setWeather] = useState<WeatherReport>(createEmptyWeatherReport());
-
-		const [inputValue, setInputValue] = useState("");
+	const [inputValue, setInputValue] = useState("");
 
 		const handleFormSubmit = async (e: React.FormEvent) => {
 			e.preventDefault();
@@ -55,8 +30,8 @@ function App() {
 			setInputValue={setInputValue}
 			/>
 
-			<Forecast
-			weather={weather} />
+			{weather && ( <Forecast
+			weather={weather} />)}
 		</div>
 	);
 }

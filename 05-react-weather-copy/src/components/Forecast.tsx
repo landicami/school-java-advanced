@@ -7,8 +7,6 @@ interface ForecastProps {
 
 const Forecast: React.FC<ForecastProps> = ({ weather }) => {
 
-
-
 	return (
 
 		<div id="forecast">
