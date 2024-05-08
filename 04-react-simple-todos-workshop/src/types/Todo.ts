@@ -5,3 +5,6 @@ export interface Todo {
 }
 
 // export type TodoList = Todo[];
+
+//lämnar ute id
+export type NewTodo = Omit<Todo, "id">;

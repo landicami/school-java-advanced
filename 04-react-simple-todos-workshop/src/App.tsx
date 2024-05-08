@@ -3,36 +3,40 @@ import AddNewTodoForm from "./components/AddNewTodoForm";
 import TodoCounter from "./components/TodoCounter";
 import TodoList from "./components/TodoList";
 import * as TodosAPI from "./services/TodosAPI";
-import { Todo } from "./types/Todo";
+import { NewTodo, Todo } from "./types/Todo";
 import "./assets/scss/App.scss";
 
 function App() {
 	const [todos, setTodos] = useState<Todo[]>([]);
 
-	const addTodo = async (todo: Todo) => {
+	const getTodos = async () => {
+		setTodos([]);
+
+		// make request to api
+		const data = await TodosAPI.getTodos();
+
+		setTodos(data);
+	};
+
+	const addTodo = async (todo: NewTodo) => {
 		try {
 		  const newTodo = await TodosAPI.addTodo(todo);
 
-		  // Uppdatera todos med den nya todo
-		  setTodos([...todos, newTodo.data]);
+		  setTodos([...todos, newTodo]);
+
+		  //vi kan också kalla på getTodos() men då måste vi flytta ut funktioner ur useEffects
 		} catch (error) {
-		  // Hantera fel om det uppstår något vid läggning till todo
 		  console.error('Error adding todo:', error);
 		}
 	  }
 
 	const handleToggleTodo = async (todo: Todo) => {
 		try {
-			const updatedTodo = await TodosAPI.toggleTodo(todo);
-			console.log(updatedTodo.data);
+			await TodosAPI.updateTodo(todo.id, {
+				completed: !todo.completed
+			});
+			getTodos();
 
-			setTodos(prevTodos => prevTodos.map(prevTodo => {
-			  if (prevTodo.id === updatedTodo.data.id) {
-				return updatedTodo.data;
-			  } else {
-				return prevTodo;
-			  }
-			}));
 		} catch (error) {
 			console.error("Error putting todo", error)
 		}
@@ -41,8 +45,9 @@ function App() {
 	const handleDeleteTodo = async (todo: Todo) => {
 		try {
 			await TodosAPI.deleteTodo(todo.id);
-			// Uppdatera todos-tillståndet genom att filtrera bort den todo med matchande id
-			setTodos(prevTodos => prevTodos.filter(toDo => toDo.id !== todo.id));
+			// prevTodos om man uppdatarer state flera gånger under samma rendering
+			// setTodos(prevTodos => prevTodos.filter(toDo => toDo.id !== todo.id));
+			getTodos();
 		} catch(error){
 			console.error("Error deleting todo", error)
 		}
@@ -54,14 +59,6 @@ function App() {
 	console.log("Component is rendering");
 
 	useEffect(() => {
-		const getTodos = async () => {
-			setTodos([]);
-
-			// make request to api
-			const data = await TodosAPI.getTodos();
-
-			setTodos(data);
-		}
 		getTodos();
 	}, []);
 
@@ -71,7 +68,6 @@ function App() {
 
 			<AddNewTodoForm
 				onAddTodo={addTodo}
-				todos={todos}
 			/>
 
 			{todos.length > 0 && (

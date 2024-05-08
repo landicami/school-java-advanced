@@ -1,14 +1,14 @@
 {
   "todos": [
     {
-      "id": 1,
-      "title": "Koka Kaffe",
-      "completed": false
-    },
-    {
       "id": 2,
       "title": "Vispa grädde",
       "completed": true
+    },
+    {
+      "title": "See ya",
+      "completed": true,
+      "id": 3
     }
   ]
 }
