@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { NewTodo } from '../types/Todo';
 
 interface AddNewTodoFormProps {
@@ -7,6 +7,8 @@ interface AddNewTodoFormProps {
 
 const AddNewTodoForm: React.FC<AddNewTodoFormProps> = ({ onAddTodo }) => {
 	const [inputNewTodoTitle, setInputNewTodoTitle] = useState("");
+
+	const inputNewTodoTitleRef = useRef<HTMLInputElement>(null);
 
 	const handleAddTodo = (e: React.FormEvent) => {
 		e.preventDefault();
@@ -22,7 +24,13 @@ const AddNewTodoForm: React.FC<AddNewTodoFormProps> = ({ onAddTodo }) => {
 
 		// clear input value
 		setInputNewTodoTitle("");
-	}
+	};
+
+	useEffect(() => {
+		//sätt fokus på inputfält om komponent mount
+		inputNewTodoTitleRef.current?.focus();
+
+	}, []);
 
 	return (
 		<form onSubmit={handleAddTodo} className="mb-3">
@@ -31,6 +39,7 @@ const AddNewTodoForm: React.FC<AddNewTodoFormProps> = ({ onAddTodo }) => {
 					aria-label="New todo title"
 					className="form-control"
 					onChange={e => setInputNewTodoTitle(e.target.value)}
+					ref={inputNewTodoTitleRef}
 					placeholder="Learn about GTD"
 					required
 					type="text"
