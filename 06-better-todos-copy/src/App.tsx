@@ -4,6 +4,7 @@ import "./assets/scss/App.scss";
 import  Container  from "react-bootstrap/Container";
 import Homepage from "../pages/Homepage";
 import TodosPage from "../pages/TodosPage";
+import TodoPage from "../pages/TodoPage";
 import Navigation from "./components/Navigation";
 import Notfound from "../pages/NotFound"
 
@@ -16,6 +17,11 @@ function App() {
 				<Routes>
 				<Route path="/" element={<Homepage />} />
 				<Route path="/todos" element={<TodosPage />} />
+				<Route
+				path="/todos/:id"
+				element={<TodoPage />}
+				/>
+
 				<Route path="*" element={<Notfound />} />
 				{/* routes */}
 				</Routes>

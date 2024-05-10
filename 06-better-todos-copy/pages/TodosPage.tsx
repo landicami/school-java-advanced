@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
 import AddNewTodoForm from "../src/components/AddNewTodoForm";
 import TodoCounter from "../src/components/TodoCounter";
-import TodoList from "../src/components/TodoList";
 import * as TodosAPI from "../src/services/TodosAPI";
 import { NewTodo, Todo } from "../src/types/Todo";
+import  ListGroup  from "react-bootstrap/ListGroup";
+import { Link } from "react-router-dom";
 
 function TodosPage() {
 	const [todos, setTodos] = useState<Todo[]>([]);
@@ -30,21 +31,20 @@ function TodosPage() {
 
 		setTodos(data);
 	}
+// ska flyttas till en annan sida
+	// const handleDeleteTodo = async (todo: Todo) => {
+	// 	await TodosAPI.deleteTodo(todo.id);
+	// 	getTodos();
+	// }
 
-	const handleDeleteTodo = async (todo: Todo) => {
-		await TodosAPI.deleteTodo(todo.id);
-		getTodos();
-	}
-
-	const handleToggleTodo = async (todo: Todo) => {
-		await TodosAPI.updateTodo(todo.id, {
-			completed: !todo.completed,
-		});
-		getTodos();
-	}
+	// const handleToggleTodo = async (todo: Todo) => {
+	// 	await TodosAPI.updateTodo(todo.id, {
+	// 		completed: !todo.completed,
+	// 	});
+	// 	getTodos();
+	// }
 
 	const finishedTodos = todos.filter(todo => todo.completed);
-	const unfinishedTodos = todos.filter(todo => !todo.completed);
 
 	console.log("Component is rendering");
 
@@ -54,7 +54,7 @@ function TodosPage() {
 
 	return (
 		<>
-			<h1>React Better Todos</h1>
+			<h1>Todos</h1>
 
 			<AddNewTodoForm
 				onAddTodo={addTodo}
@@ -62,19 +62,19 @@ function TodosPage() {
 
 			{todos.length > 0 && (
 				<>
-					<h2 className="mb-2 h5">💪🏻 Stuff I got to do</h2>
-					<TodoList
-						onDelete={handleDeleteTodo}
-						onToggle={handleToggleTodo}
-						todos={unfinishedTodos}
-					/>
-
-					<h2 className="mb-2 h5">🥺 Stuff I've done</h2>
-					<TodoList
-						onDelete={handleDeleteTodo}
-						onToggle={handleToggleTodo}
-						todos={finishedTodos}
-					/>
+					<ListGroup className="todolist">
+						{todos.map(todo => (
+							<ListGroup.Item
+								action
+								as={Link}
+								key={todo.id}
+								className={todo.completed ? "done" : ""}
+								to={`/todos/${todo.id}`}
+							>
+								<span className="todo-title">{todo.title}</span>
+							</ListGroup.Item>
+						))}
+					</ListGroup>
 
 					<TodoCounter finished={finishedTodos.length} total={todos.length} />
 				</>
