@@ -12,35 +12,38 @@ function App() {
 
 
 	const handleSearch = async (location: string) => {
-		console.log("Someone wants the weather for:", location);
+		setCurrentWeather(null);
 		setIsSearching(true)
+		setError(false)
+
 		// Call API and ask for weather in `location`
 		try {
 			const data = await getCurrentWeather(location);
 
 		// Update current weather state with the weather in `location`
 		setCurrentWeather(data);
-		setIsSearching(false);
 		setError(false)
 		} catch (err) {
 			setError(true)
 		}
+		setIsSearching(false);
+
 	}
 
 	return (
 		<div id="app" className="container">
-			{isSearching && (<div><img src="src/assets/images/747.svg" alt="Flying stuff"></img></div>)}
 
 			<SearchCity
 			onSearch={handleSearch}
 			 />
+			{isSearching && (<div><img src="src/assets/images/747.svg" alt="Flying stuff"></img></div>)}
 
-			{error && <div className="alert alert-danger">No city like that exists</div>}
+			{error ? <div className="alert alert-danger">No city like that exists</div> : ""}
 
 			{currentWeather &&
 			<Forecast
 			data={currentWeather}
-			isSearching={isSearching} />}
+			/>}
 		</div>
 	);
 }

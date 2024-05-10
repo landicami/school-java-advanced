@@ -4,10 +4,9 @@ import { WeatherReport } from "../services/OWMAPI.types";
 
 interface ForecastProps {
 	data: WeatherReport;
-	isSearching: boolean
 }
 
-const Forecast: React.FC<ForecastProps> = ({ data, isSearching }) => {
+const Forecast: React.FC<ForecastProps> = ({ data }) => {
 
 	const [banner, setBanner] = useState('');
 
@@ -19,7 +18,7 @@ const Forecast: React.FC<ForecastProps> = ({ data, isSearching }) => {
 
 	const time = new Date(data.dt * 1000);
 	return (<>
-		{isSearching ? <div>Loading...</div> :
+
 		<div id="forecast">
 			<div className="card">
 				<img src={banner} className="card-img-top" alt="Daytime, nighttime, daytime, nighttime" />
@@ -48,8 +47,8 @@ const Forecast: React.FC<ForecastProps> = ({ data, isSearching }) => {
 						<li key={condition.id}>
 						<img
 						src={`http://openweathermap.org/img/wn/${condition.icon}@2x.png`}
-						title={condition.main}
-						alt={condition.main} /></li>)
+						title={condition.description}
+						alt={condition.main} />{condition.main}</li>)
 					}
 
 					</ul>
@@ -63,8 +62,6 @@ const Forecast: React.FC<ForecastProps> = ({ data, isSearching }) => {
 				</div>
 			</div>
 		</div>
-
-}
 </>);
 };
 

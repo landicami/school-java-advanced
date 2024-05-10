@@ -16,6 +16,9 @@ const SearchCity: React.FC<SearchCityProps> = ({ onSearch }) => {
         setCity("");
     }
 
+	const tooFewCharacters = (city.trim().length > 0 && city.trim().length < 3);
+
+
 
     return (
         <>
@@ -39,6 +42,9 @@ const SearchCity: React.FC<SearchCityProps> = ({ onSearch }) => {
                             🔍
                         </button>
                     </div>
+
+					{tooFewCharacters && <div className="text-danger form-text">Too few charachters, enter 3 or more!</div>}
+
                 </form>
             </div>
         </>
