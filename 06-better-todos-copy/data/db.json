@@ -11,9 +11,14 @@
       "completed": false
     },
     {
-      "title": "Drink ALL the coffee 🤪",
+      "title": "Learn about stuff",
+      "completed": true,
+      "id": 5
+    },
+    {
+      "title": "I will add with useEffect",
       "completed": false,
-      "id": 4
+      "id": 7
     }
   ]
 }
