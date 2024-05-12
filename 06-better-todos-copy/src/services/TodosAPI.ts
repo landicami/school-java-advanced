@@ -14,6 +14,12 @@ export const getTodos = async () => {
 	return res.data;
 }
 
+export const getOneTodo =async (todo_id:number) => {
+	const res = await axios.get<Todo>(`${BASE_URL}/todos/${todo_id}`);
+	return res.data
+
+}
+
 /**
  * Get all todos using Fetch
  *
