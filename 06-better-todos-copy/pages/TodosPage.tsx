@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
-import AddNewTodoForm from "../src/components/AddNewTodoForm";
 import TodoCounter from "../src/components/TodoCounter";
 import * as TodosAPI from "../src/services/TodosAPI";
 import { NewTodo, Todo } from "../src/types/Todo";
 import  ListGroup  from "react-bootstrap/ListGroup";
 import { Link } from "react-router-dom";
+import AddNewTodo from "./AddNewTodo";
 
 function TodosPage() {
 	const [todos, setTodos] = useState<Todo[]>([]);
@@ -16,13 +16,6 @@ function TodosPage() {
 	console.log("I have rendered this many times:", renderCountRef.current);
 	*/
 
-	const addTodo = async (todo: NewTodo) => {
-		// const newTodo = await TodosAPI.createTodo(todo);
-		// setTodos([...todos, newTodo]);
-		await TodosAPI.createTodo(todo);
-		getTodos();
-	}
-
 	const getTodos = async () => {
 		setTodos([]);
 
@@ -31,18 +24,7 @@ function TodosPage() {
 
 		setTodos(data);
 	}
-// ska flyttas till en annan sida
-	// const handleDeleteTodo = async (todo: Todo) => {
-	// 	await TodosAPI.deleteTodo(todo.id);
-	// 	getTodos();
-	// }
 
-	// const handleToggleTodo = async (todo: Todo) => {
-	// 	await TodosAPI.updateTodo(todo.id, {
-	// 		completed: !todo.completed,
-	// 	});
-	// 	getTodos();
-	// }
 
 	const finishedTodos = todos.filter(todo => todo.completed);
 
@@ -56,9 +38,7 @@ function TodosPage() {
 		<>
 			<h1>Todos</h1>
 
-			<AddNewTodoForm
-				onAddTodo={addTodo}
-			/>
+
 
 			{todos.length > 0 && (
 				<>
