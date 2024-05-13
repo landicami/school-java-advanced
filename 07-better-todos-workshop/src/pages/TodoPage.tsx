@@ -73,6 +73,17 @@ const TodoPage = () => {
 				deleteTodo={deleteTodo}
 				todo={todo}
 				/>
+
+			<Button className="ms-2" variant="info" onClick={() =>
+			{
+				navigate(`/todos/${todoId}/edit`, {
+					state: {
+						todo
+					}
+				})
+			}
+			}>Edit</Button>
+
 			</div>
 
 			<Link to="/todos" className="btn btn-secondary" role="button">
