@@ -42,7 +42,15 @@ const TodoPage = () => {
 	const handleDeleteTodo = async () => {
 		await TodosAPI.deleteTodo(todoId);
 		setTimeout(() => {
-			navigate("/todos");
+			navigate("/todos", {
+				replace: true,
+				state: {
+					status: {
+						type: "success",
+						message: `Todo with id ${todoId} was deleted`
+					}
+				}
+			}); //tar bort sidan när den har raderats replace och pass state along with navigate
 		}, 200);
 	}
 
