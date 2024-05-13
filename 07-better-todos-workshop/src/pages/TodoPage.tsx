@@ -3,6 +3,7 @@ import Button from "react-bootstrap/Button";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { Todo } from "../types/Todo";
 import * as TodosAPI from "../services/TodosAPI";
+import ConfirmDeleteButton from "../components/ConfirmDeleteButton";
 
 const TodoPage = () => {
 	const [todo, setTodo] = useState<Todo | null>(null);
@@ -68,7 +69,10 @@ const TodoPage = () => {
 			<div className="buttons mb-3">
 				<Button variant="success" onClick={() => toggleTodo(todo)}>Toggle</Button>
 
-				<Button variant="danger" onClick={() => deleteTodo(todo)}>Delete</Button>
+				<ConfirmDeleteButton
+				deleteTodo={deleteTodo}
+				todo={todo}
+				/>
 			</div>
 
 			<Link to="/todos" className="btn btn-secondary" role="button">
