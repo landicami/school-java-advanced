@@ -23,7 +23,7 @@ function App() {
 				element={<TodoPage />}
 				/>
 
-				<Route path="/add" element={<AddNewTodo />} />
+				<Route path="/todos/add" element={<AddNewTodo />} />
 
 				<Route path="*" element={<Notfound />} />
 				{/* routes */}
