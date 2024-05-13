@@ -12,14 +12,15 @@ const ConfirmDeleteButton: React.FC<ConfirmDeleteButtonProps> = ( {deleteTodo, t
 	<Button
 	className='ms-2'
 	variant="danger"
-	onClick={() =>
-
-		{const confirmBox = window.confirm(
-			"Do you really want to delete this todo?"
+	onClick={() => {
+		const confirmBox = window.confirm(
+			`Do you really want to delete the todo "${todo.title}"?`
 		  )
-		  if (confirmBox === true) {
+		if (confirmBox === true) {
 			{deleteTodo(todo)}
-		  }}}>Delete</Button>
+		}
+	}}>
+		Delete</Button>
   )
 }
 
