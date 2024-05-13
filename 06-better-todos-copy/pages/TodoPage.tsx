@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { getOneTodo } from "../src/services/TodosAPI";
 import { Todo } from "../src/types/Todo";
 import { Link } from "react-router-dom";
 import Button from 'react-bootstrap/Button';
@@ -15,19 +14,19 @@ const TodoPage = () => {
   const [onetodo, setOneTodo] = useState<Todo | null>(null);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const fetchTodo = async (id:number) => {
-      try {
-        const todo = await getOneTodo(id);
-        setOneTodo(todo);
-      } catch (error) {
-        console.error("Error fetching todo:", error);
-      }
-    };
+  const fetchTodo = async (id:number) => {
+	try {
+	  const todo = await TodosAPI.getOneTodo(id);
+	  setOneTodo(todo);
+	} catch (error) {
+	  console.error("Error fetching todo:", error);
+	}
+}
+	//läggs i en useEffect why: Att inkludera fetchTodo(todoId) i en useEffect som lyssnar på todoId att din komponent uppdateras korrekt baserat på det aktuella todo-id:t och att korrekta todos hämtas från API:et vid rätt tillfälle.
+	useEffect(() => {
 
-    fetchTodo(todoId);
-  }, [todoId]);
-  console.log(onetodo);
+		fetchTodo(todoId);
+	}, [todoId]);
 
 	const handleToggle = async () => {
 		if(!onetodo){
@@ -37,9 +36,7 @@ const TodoPage = () => {
 			completed: !onetodo.completed
 
 		});
-		const todo = await getOneTodo(todoId);
-			setOneTodo(todo);
-
+		fetchTodo(todoId);
 	};
 
 	const handleDeleteTodo = async () => {
@@ -67,7 +64,9 @@ const TodoPage = () => {
 		onClick={handleDeleteTodo}>Delete me</Button>
 	</div>
 
-	<Link to="/todos"><Button variant="outline-light">Back to all todos</Button></Link>
+	<Link to="/todos"
+	className="btn btn-secondary"
+	role="button"> Back to todos</Link>
 </>
   );
 };
