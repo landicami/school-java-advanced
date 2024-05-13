@@ -76,7 +76,11 @@ const TodoPage = () => {
 
 			<Button className="ms-2" variant="info" onClick={() =>
 			{
-				navigate(`/todos/${todoId}/edit`)
+				navigate(`/todos/${todoId}/edit`, {
+					state: {
+						todo
+					}
+				})
 			}
 			}>Edit</Button>
 
