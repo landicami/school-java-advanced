@@ -4,16 +4,19 @@ import  Container  from "react-bootstrap/Container";
 import Form from "react-bootstrap/Form";
 import { HackerResponse } from "../types/HackerNewstypes";
 import { getQuery } from "../services/SearchApi";
+
 const Searchpage = () => {
 	const [searchNews, setIsSearchNews] = useState<HackerResponse | null>(null);
 	const [error, setError] = useState<string | false>(false);
 	const [inputNewSearch, setinputNewSearch] = useState("");
+	const [isSearching, setIsSearching ] = useState(false);
 
 	const getNews = async (searchQuery: string) => {
 		try {
 			const data = await getQuery(searchQuery);
 			setIsSearchNews(data);
 			console.log("searching for", searchQuery)
+			setIsSearching(false);
 		} catch (err){
 			if (err instanceof Error) {
 				setError(err.message);
@@ -24,6 +27,7 @@ const Searchpage = () => {
 	}
 
 	const handleSubmit = (e: React.FormEvent) => {
+		setIsSearching(true)
 		e.preventDefault();
 		const search = inputNewSearch;
 		getNews(search)
@@ -52,15 +56,25 @@ const Searchpage = () => {
 
 		{error && (<p>error</p>)}
 
-		{searchNews && searchNews.hits.map(
-			data =>
-			<React.Fragment key={data.objectID}>
-				<div className="col-8 bg-white">
-				<a href={data.url}>{data.title}</a>
-				<p> {data.points} points <span className="bold">by</span> {data.author} | {data.created_at}</p>
+		{isSearching && <p>Searching...</p>}
+
+		{searchNews &&
+			<>
+				<div>
+					<h3>This is your queries:</h3>
 				</div>
-			</React.Fragment>
-			)
+					<Container className="bg-white p-2 rounded">
+					{searchNews.hits.map(
+					data =>
+
+						<div className="news" key={data.objectID}>
+						<a className="link" href={data.url}>{data.title}</a>
+						<p> {data.points} points <span className="bold">by</span> {data.author} | {data.created_at}</p>
+						</div>
+					)}
+					</Container>
+			</>
+
 		}
 
 	</Container>
