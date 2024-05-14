@@ -1,18 +1,20 @@
-import { useState } from 'react'
 import "./assets/scss/App.scss";
 import { Routes, Route } from "react-router-dom";
+import Homepage from './pages/Homepage';
+import Searchpage from './pages/Searchpage';
+import Navigation from "./components/Navigation";
 
 
 function App() {
 
   return (
     <>
-	<div className='container'>
-      <h1>My first react app from vite</h1>
-	  </div>
-	  <Routes>
-		{/* <Route path="/" element={} /> */}
-	  </Routes>
+		<Navigation />
+
+		<Routes>
+			<Route path="/" element={<Homepage />} />
+			<Route path="/search" element={<Searchpage />} />
+		</Routes>
     </>
   )
 }
