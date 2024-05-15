@@ -41,17 +41,18 @@ const Searchpage = () => {
 		<Form onSubmit={handleSubmit} className="form">
 			<Form.Group className="mb-3" controlId="formBasicEmail">
 				<Form.Label>Search for hacked news</Form.Label>
-				<Form.Control
-				type="text"
-				placeholder="Enter your search here"
-				onChange={e => setinputNewSearch(e.target.value)}
-				/>
-				<Form.Text className="text-muted">
-				Search for whatever, whenever with Hacker bae.
-				</Form.Text>
+					<Form.Control
+						type="text"
+						placeholder="Enter your search here"
+						onChange={e => setinputNewSearch(e.target.value)}
+						value={inputNewSearch}
+					/>
+						<Form.Text className="text-muted">
+							Search for whatever, whenever with Hacker bae.
+						</Form.Text>
 			</Form.Group>
-			<Button variant="primary" type="submit">Search
-			</Button>
+				<Button variant="primary" type="submit">Search
+				</Button>
     	</Form>
 
 		{error && (<p>error</p>)}
