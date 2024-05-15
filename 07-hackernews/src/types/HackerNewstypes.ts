@@ -1,10 +1,4 @@
-interface HighlightResult {
-    matchLevel: string;
-    matchedWords: string[];
-    value: string;
-}
-
-interface HackerHit {
+export interface HackerHit {
     author: string;
     created_at: string;
     created_at_i: number;
@@ -17,4 +11,8 @@ interface HackerHit {
 
 export interface HackerResponse {
     hits: HackerHit[];
+	hitsPerPage: number;
+	nbHits: number;
+	nbPages: number;
+	page: number;
 }
