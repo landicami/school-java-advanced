@@ -46,12 +46,16 @@ const Searchpage = () => {
 						placeholder="Enter your search here"
 						onChange={e => setinputNewSearch(e.target.value)}
 						value={inputNewSearch}
+						required
 					/>
 						<Form.Text className="text-muted">
 							Search for whatever, whenever with Hacker bae.
 						</Form.Text>
 			</Form.Group>
-				<Button variant="primary" type="submit">Search
+				<Button
+				variant="primary"
+				type="submit"
+				disabled={inputNewSearch.trim().length < 3}>Search
 				</Button>
     	</Form>
 
