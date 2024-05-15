@@ -1,19 +1,28 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Button from "react-bootstrap/Button";
 import  Container  from "react-bootstrap/Container";
 import Form from "react-bootstrap/Form";
 import { HackerResponse } from "../types/HackerNewstypes";
-import { getQuery } from "../services/SearchApi";
+import { getQuery as APIQuery } from "../services/SearchApi";
 
 const Searchpage = () => {
 	const [searchNews, setIsSearchNews] = useState<HackerResponse | null>(null);
 	const [error, setError] = useState<string | false>(false);
 	const [inputNewSearch, setinputNewSearch] = useState("");
 	const [isSearching, setIsSearching ] = useState(false);
+	const queryRef = useRef("");
+	const focusRef = useRef<HTMLInputElement>(null);
+
 
 	const getNews = async (searchQuery: string) => {
+		setError(false); //nollställ error om vi hade något innan!
+		setIsSearching(true); //sätt sökning till sant så vi visar Loading
+		setIsSearchNews(null); //sätt sökning till null föra tt gömma tidigare resultat
+
+		queryRef.current = searchQuery; //spara ner sökningen i en variabel
+
 		try {
-			const data = await getQuery(searchQuery);
+			const data = await APIQuery(searchQuery);
 			setIsSearchNews(data);
 			console.log("searching for", searchQuery)
 			setIsSearching(false);
@@ -24,14 +33,19 @@ const Searchpage = () => {
 				setError("ERROR: We've reached an unreachable state. Anything is possible. The limits were in our heads all along. Follow your dreams.");
 			}
 		}
+
+		setIsSearching(false);
 	}
 
 	const handleSubmit = (e: React.FormEvent) => {
-		setIsSearching(true)
 		e.preventDefault();
-		const search = inputNewSearch;
+		const search = inputNewSearch.trim();
 		getNews(search)
 	}
+
+	useEffect(() => {
+		focusRef.current?.focus();
+	}, []);
 
 
 	return (
@@ -47,6 +61,8 @@ const Searchpage = () => {
 						onChange={e => setinputNewSearch(e.target.value)}
 						value={inputNewSearch}
 						required
+						ref={focusRef}
+
 					/>
 						<Form.Text className="text-muted">
 							Search for whatever, whenever with Hacker bae.
@@ -66,9 +82,10 @@ const Searchpage = () => {
 		{searchNews &&
 			<>
 				<div>
-					<h3>This is your queries:</h3>
+					<h3>Here is {searchNews.nbHits} queries for {queryRef.current}</h3>
 				</div>
-					<Container className="bg-white p-2 rounded">
+					{searchNews.hits.length > 0 &&
+					<Container className="bg-white p-2 mb-3 rounded">
 					{searchNews.hits.map(
 					data =>
 
@@ -77,7 +94,19 @@ const Searchpage = () => {
 						<p> {data.points} points <span className="bold">by</span> {data.author} | {data.created_at}</p>
 						</div>
 					)}
-					</Container>
+					</Container>}
+
+					<div className="d-flex justify-content-between align-items-center">
+						<div className="prev">
+							<Button variant="primary">Previous Page</Button>
+						</div>
+
+						<div className="page">{searchNews.page + 1}</div>
+
+						<div className="next">
+							<Button variant="primary">Next Page</Button>
+						</div>
+					</div>
 			</>
 
 		}
