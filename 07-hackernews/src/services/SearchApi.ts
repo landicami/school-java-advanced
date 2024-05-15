@@ -15,7 +15,7 @@ const BASE_URL = "http://hn.algolia.com/api/v1/"
 /**
  * Get query
  */
-export const getQuery = async (SEARCH_QUERY: string) => {
-	const res = await axios.get<HackerResponse>(`${BASE_URL}/search_by_date?query=${SEARCH_QUERY}&tags=story&page=0`);
+export const getQuery = async (SEARCH_QUERY: string, page = 0) => {
+	const res = await axios.get<HackerResponse>(`${BASE_URL}/search_by_date?query=${SEARCH_QUERY}&tags=story&page=${page}`);
 	return res.data
 }
