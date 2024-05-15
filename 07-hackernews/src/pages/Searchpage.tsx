@@ -4,25 +4,28 @@ import  Container  from "react-bootstrap/Container";
 import Form from "react-bootstrap/Form";
 import { HackerResponse } from "../types/HackerNewstypes";
 import { getQuery as APIQuery } from "../services/SearchApi";
+import Pagination from "../components/Pagination";
 
 const Searchpage = () => {
 	const [searchNews, setIsSearchNews] = useState<HackerResponse | null>(null);
 	const [error, setError] = useState<string | false>(false);
 	const [inputNewSearch, setinputNewSearch] = useState("");
 	const [isSearching, setIsSearching ] = useState(false);
+	const [page, setPage] = useState(0)
 	const queryRef = useRef("");
 	const focusRef = useRef<HTMLInputElement>(null);
 
 
-	const getNews = async (searchQuery: string) => {
+	const getNews = async (searchQuery: string, page: number) => {
 		setError(false); //nollställ error om vi hade något innan!
 		setIsSearching(true); //sätt sökning till sant så vi visar Loading
 		setIsSearchNews(null); //sätt sökning till null föra tt gömma tidigare resultat
 
 		queryRef.current = searchQuery; //spara ner sökningen i en variabel
+		console.log("page in getnews is", page)
 
 		try {
-			const data = await APIQuery(searchQuery);
+			const data = await APIQuery(searchQuery, page);
 			setIsSearchNews(data);
 			console.log("searching for", searchQuery)
 			setIsSearching(false);
@@ -35,12 +38,33 @@ const Searchpage = () => {
 		}
 
 		setIsSearching(false);
+
 	}
 
 	const handleSubmit = (e: React.FormEvent) => {
 		e.preventDefault();
 		const search = inputNewSearch.trim();
-		getNews(search)
+		getNews(search, page)
+	}
+
+	console.log(searchNews?.page);
+	console.log("page outside functions is", page );
+
+	const addpage = () => {
+		setPage(prevState => prevState + 1); // Uppdatera sidan med det nya värdet
+		console.log("hey this is addpage number", page); // Här kommer page fortfarande att vara det gamla värdet
+		const nextPage = page + 1; // Använd det nya värdet
+		const search = inputNewSearch.trim();
+		getNews(search, nextPage);
+	}
+
+
+	const backPage = () => {
+		setPage(prevState => prevState - 1)
+		console.log("hey this is backpage number", page)
+		const prevPage = page - 1
+		const search = inputNewSearch.trim();
+		getNews(search, prevPage)
 	}
 
 	useEffect(() => {
@@ -77,7 +101,7 @@ const Searchpage = () => {
 
 		{error && (<p>error</p>)}
 
-		{isSearching && <p>Searching...</p>}
+		{isSearching && <p>Loading...</p>}
 
 		{searchNews &&
 			<>
@@ -96,17 +120,12 @@ const Searchpage = () => {
 					)}
 					</Container>}
 
-					<div className="d-flex justify-content-between align-items-center">
-						<div className="prev">
-							<Button variant="primary">Previous Page</Button>
-						</div>
+					< Pagination
+						backPage={backPage}
+						addpage={addpage}
+						searchNews={searchNews}
+						page={page} />
 
-						<div className="page">{searchNews.page + 1}</div>
-
-						<div className="next">
-							<Button variant="primary">Next Page</Button>
-						</div>
-					</div>
 			</>
 
 		}
