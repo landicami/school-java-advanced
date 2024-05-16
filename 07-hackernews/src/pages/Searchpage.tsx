@@ -44,10 +44,11 @@ const Searchpage = () => {
 	const handleSubmit = (e: React.FormEvent) => {
 		e.preventDefault();
 		const search = inputNewSearch.trim();
-		getNews(search, page)
+		setPage(0)
+		getNews(search, 0)
 	}
 
-	console.log(searchNews?.page);
+	console.log(searchNews);
 	console.log("page outside functions is", page );
 
 	const addpage = () => {
