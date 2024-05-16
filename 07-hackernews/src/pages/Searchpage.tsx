@@ -19,6 +19,7 @@ const Searchpage = () => {
 
 
 	const query = searchParams.get("query");
+	console.log(query);
 
 	const getNews = async (searchQuery: string, page: number) => {
 		setError(false); //nollställ error om vi hade något innan!
