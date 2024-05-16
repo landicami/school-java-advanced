@@ -124,7 +124,7 @@ const Searchpage = () => {
 					< Pagination
 						backPage={backPage}
 						addpage={addpage}
-						searchNews={searchNews}
+						data={searchNews}
 						page={page} />
 
 			</>
