@@ -5,6 +5,7 @@ import Form from "react-bootstrap/Form";
 import { HackerResponse } from "../types/HackerNewstypes";
 import { getQuery as APIQuery } from "../services/SearchApi";
 import Pagination from "../components/Pagination";
+import { useSearchParams } from "react-router-dom";
 
 const Searchpage = () => {
 	const [searchNews, setIsSearchNews] = useState<HackerResponse | null>(null);
@@ -14,7 +15,10 @@ const Searchpage = () => {
 	const [page, setPage] = useState(0)
 	const queryRef = useRef("");
 	const focusRef = useRef<HTMLInputElement>(null);
+	const [searchParams, setSearchParams ] = useSearchParams();
 
+
+	const query = searchParams.get("query");
 
 	const getNews = async (searchQuery: string, page: number) => {
 		setError(false); //nollställ error om vi hade något innan!
@@ -43,6 +47,8 @@ const Searchpage = () => {
 
 	const handleSubmit = (e: React.FormEvent) => {
 		e.preventDefault();
+		let params = inputNewSearch.trim();
+		setSearchParams(params);
 		const search = inputNewSearch.trim();
 		setPage(0)
 		getNews(search, 0)
