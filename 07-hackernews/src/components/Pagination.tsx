@@ -18,7 +18,7 @@ const Pagination:React.FC<PaginationProps> = ({page, addpage, backPage, searchNe
 							>{page === 0 ? "No previous pages" : "Previous Page"}</Button>
 						</div>
 
-						<div className="page">{searchNews && searchNews.page + 1}</div>
+						<div className="page">{searchNews && (<><p>Page {searchNews.page + 1} of {searchNews.nbPages}</p></>)}</div>
 
 						<div className="next">
 							<Button
