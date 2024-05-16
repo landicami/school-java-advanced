@@ -5,9 +5,11 @@ interface PaginationProps {
 	page: number;
 	backPage: () => void;
 	addpage: () => void;
-	searchNews: HackerResponse | null
+	data: HackerResponse | null
 }
-const Pagination:React.FC<PaginationProps> = ({page, addpage, backPage, searchNews}) => {
+
+//obs om jag vill göra den till en allmän komponent så behöver jag döpa om funktionerna eller variabelnamnen
+const Pagination:React.FC<PaginationProps> = ({page, addpage, backPage, data}) => {
   return (
 	<div className="d-flex justify-content-between align-items-center">
 						<div className="prev">
@@ -18,15 +20,15 @@ const Pagination:React.FC<PaginationProps> = ({page, addpage, backPage, searchNe
 							>{page === 0 ? "No previous pages" : "Previous Page"}</Button>
 						</div>
 
-						<div className="page">{searchNews && (<><p>Page {searchNews.page + 1} of {searchNews.nbPages}</p></>)}</div>
+						<div className="page">{data && (<><p>Page {data.page + 1} of {data.nbPages}</p></>)}</div>
 
 						<div className="next">
 							<Button
 							variant="primary"
 							onClick={addpage}
-							disabled={!searchNews || (searchNews.hits.length === 0)}
+							disabled={!data || (data.hits.length === 0)}
 							>
-								{(!searchNews || (searchNews.hits.length === 0)) ? "No more pages" : "Next Page"}
+								{(!data || (data.hits.length === 0)) ? "No more pages" : "Next Page"}
 							</Button>
 						</div>
 					</div>
