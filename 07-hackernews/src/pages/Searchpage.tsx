@@ -52,7 +52,11 @@ const Searchpage = () => {
 	console.log("page outside functions is", page );
 
 	const addpage = () => {
-		setPage(prevState => prevState + 1); // Uppdatera sidan med det nya värdet
+		if(!searchNews){
+			return;
+		};
+
+		setPage(searchNews?.page + 1); // Uppdatera sidan med det nya värdet
 		console.log("hey this is addpage number", page); // Här kommer page fortfarande att vara det gamla värdet
 		const nextPage = page + 1; // Använd det nya värdet
 		const search = inputNewSearch.trim();
@@ -61,7 +65,10 @@ const Searchpage = () => {
 
 
 	const backPage = () => {
-		setPage(prevState => prevState - 1)
+		if(!searchNews){
+			return;
+		};
+		setPage(searchNews?.page - 1)
 		console.log("hey this is backpage number", page)
 		const prevPage = page - 1
 		const search = inputNewSearch.trim();
