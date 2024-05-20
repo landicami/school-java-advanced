@@ -17,6 +17,9 @@ const Navigation = () => {
 				<Navbar.Collapse id="basic-navbar-nav">
 					<Nav className="ms-auto">
 						<Nav.Link as={NavLink} end to="/search">Search</Nav.Link>
+						<Nav.Link as={NavLink} end to="/randomdog">Random dog</Nav.Link>
+
+
 						<Button
 						className="me-2"
 						variant="outline-secondary"
