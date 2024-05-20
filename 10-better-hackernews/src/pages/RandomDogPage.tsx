@@ -1,7 +1,4 @@
-import { useEffect, useState } from 'react';
-import axios from 'axios';
 import Image from "react-bootstrap/Image";
-import { Dog } from '../types/dogAPI';
 import Button from 'react-bootstrap/Button';
 import useAxiosDog from '../hooks/useAxiosDog';
 
@@ -29,13 +26,17 @@ const RandomDogPage = () => {
 
 // 		getData(url);
 // 	}, [url]);
-const { data, isLoading, setUrl } = useAxiosDog();
+const { data, isLoading, error, handleSetUrl, lastUrlRef } = useAxiosDog();
 
   return (
 	<>
-		{isLoading && <p>Loading...</p>}
 
 		<h1>En random dog</h1>
+
+		{isLoading && <h2>Loading...</h2>}
+
+
+		{error && <h2>{error}</h2>}
 
 		{data && data.status === "success" && (
 			<div>
@@ -44,11 +45,17 @@ const { data, isLoading, setUrl } = useAxiosDog();
 			)
 			}
 
-		<Button className='btn btn-warning' onClick={() => setUrl("https://dog.ceo/api/breeds/image/random")}>
+		<Button className='btn btn-warning' onClick={() => handleSetUrl("https://dog.ceo/api/breeds/image/random")}>
 			Get new doggman
 		</Button>
-		<Button className='btn btn-primary' onClick={() => setUrl("https://dog.ceo/api/breed/shiba/images/random")}>
+		<Button className='btn btn-primary me-2' onClick={() => handleSetUrl("https://dog.ceo/api/breed/shiba/images/random")}>
 		Get specifik doggman
+		</Button>
+		<Button className='btn btn-info me-2' onClick={() => handleSetUrl(lastUrlRef.current)}>
+		Get same shit
+		</Button>
+		<Button className='btn btn-danger me-2' onClick={() => handleSetUrl("http://google.som")}>
+		DOH!
 		</Button>
 
 	</>
