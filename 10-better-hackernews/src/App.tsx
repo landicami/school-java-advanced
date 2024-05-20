@@ -7,12 +7,21 @@ import SearchPage from "./pages/SearchPage";
 import "./assets/scss/App.scss";
 import useTheme from "./hooks/useTheme";
 
+import clsx from "clsx";
+
 function App() {
-	const { isDarkMode, toggleTheme } = useTheme();
+	const { isDarkMode } = useTheme();
+	const cssClasses = clsx({
+		"bg-white": !isDarkMode,
+		"text-dark": !isDarkMode,
+		"bg-success": isDarkMode,
+		"text-warning": isDarkMode
+	});
 
 	return (
 		<div id="App"
-		className={isDarkMode ? "bg-dark text-white" : "bg-white text-dark"}
+		className={cssClasses}
+		// className={isDarkMode ? "bg-dark text-white" : "bg-white text-dark"}
 		>
 		<Navigation />
 
