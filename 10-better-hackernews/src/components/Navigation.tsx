@@ -3,17 +3,10 @@ import Navbar from "react-bootstrap/Navbar";
 import Nav from "react-bootstrap/Nav";
 import { Link, NavLink } from "react-router-dom";
 import  Button  from "react-bootstrap/Button";
-import { useContext } from "react";
-import { ThemeContext } from "../context/ThemeContextProvider";
+import useTheme from "../hooks/useTheme";
 
 const Navigation = () => {
-	const themeContextfromUseContext = useContext(ThemeContext)
-
-	if(!themeContextfromUseContext){
-		throw new Error("Trying to use ThemeContext outside of ThemeContextProvider.");
-	}
-
-	const { isDarkMode, toggleTheme } = themeContextfromUseContext;
+	const { isDarkMode, toggleTheme } = useTheme();
 
 	return (
 		<Navbar bg="dark" variant="dark" expand="md">
