@@ -8,6 +8,7 @@ import "./assets/scss/App.scss";
 import useTheme from "./hooks/useTheme";
 
 import clsx from "clsx";
+import RandomDogPage from "./pages/RandomDogPage";
 
 function App() {
 	const { isDarkMode } = useTheme();
@@ -29,6 +30,7 @@ function App() {
 				<Routes>
 					<Route path="/" element={<HomePage />} />
 					<Route path="/search" element={<SearchPage />} />
+					<Route path="/randomdog" element={<RandomDogPage />} />
 
 					<Route path="*" element={<NotFoundPage />} />
 				</Routes>
