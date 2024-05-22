@@ -8,6 +8,7 @@ import NotFoundPage from "./pages/NotFoundPage";
 import SearchPage from "./pages/SearchPage";
 import "./assets/scss/App.scss";
 import RandomDogPage from "./pages/RandomDogPage";
+import ChuckNorrisPage from "./pages/ChuckNorrisPage";
 
 function App() {
 	const { isDarkMode } = useTheme();
@@ -27,6 +28,7 @@ function App() {
 					<Route path="/" element={<HomePage />} />
 					<Route path="/random-dog" element={<RandomDogPage />} />
 					<Route path="/search" element={<SearchPage />} />
+					<Route path="/joke" element={<ChuckNorrisPage />} />
 
 					<Route path="*" element={<NotFoundPage />} />
 				</Routes>
