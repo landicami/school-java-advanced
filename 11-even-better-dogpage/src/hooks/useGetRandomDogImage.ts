@@ -10,20 +10,40 @@ const useGetRandomDogImage = (breed: string | null = null) => {
 	? `https://dog.ceo/api/breed/${breed}/images/random`
 	: "https://dog.ceo/api/breeds/image/random";
 
-	const getRandomDogImage = async (breed: string | null = null) => {
-		try {
-			const res = await axios.get<RandomDogImage>(`https://dog.ceo/api/breed/${breed}/images/random`)
-			console.log(res.data)
+	const { changeUrl } = useGetData();
 
-			return res.data
-		} catch (error) {
-			setError(error instanceof Error ? error.message : "Something else went very bad")
-		}
+	// const getRandomDogImage = async (breed: string | null = null) => {
+	// 	try {
+	// 		const res = await axios.get<RandomDogImage>(`https://dog.ceo/api/breed/${breed}/images/random`)
+	// 		console.log(res.data)
 
-	};
-	getRandomDogImage(breed);
+	// 		return res.data
+	// 	} catch (error) {
+	// 		setError(error instanceof Error ? error.message : "Something else went very bad")
+	// 	}
+	// };
 
-	return useGetData<RandomDogImage>(url);
+	return useGetData<RandomDogImage>(url)
 }
+
+// const getRandomDogImageUrl = (breed?: string) => {
+// 	return breed
+// 		? `https://dog.ceo/api/breed/${breed}/images/random`
+// 		: "https://dog.ceo/api/breeds/image/random";
+// }
+
+// const useGetRandomDogImage = (breed?: string) => {
+// 	const url = getRandomDogImageUrl(breed);
+// 	const query = useGetData<RandomDogImage>(url);
+
+// 	const getRandomDogImage = (breed?: string) => {
+// 		const url = getRandomDogImageUrl(breed);
+// 		query.changeUrl(url);
+// 	}
+
+// 	return {
+// 		getRandomDogImage,
+// 		...query,
+// 	};
 
 export default useGetRandomDogImage;
