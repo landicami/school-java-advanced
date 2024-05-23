@@ -11,7 +11,7 @@ const HomePage = () => {
 
 			<p>Your theme is: {isDarkMode ? "dark 🌙" : "light ☀️"}</p>
 
-			<Button onClick={toggleTheme}>
+			<Button className="me-2" onClick={toggleTheme}>
 				Switch theme
 			</Button>
 
