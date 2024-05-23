@@ -4,7 +4,9 @@ import Image from "react-bootstrap/Image";
 import useGetRandomDogImage from "../hooks/useGetRandomDogImage";
 
 const RandomDogPage = () => {
-	const { changeUrl, data, error, execute, isError, isLoading } = useGetRandomDogImage("mountain/bernese");
+	const { changeUrl, data, error, execute, isError, isLoading } = useGetRandomDogImage();
+	// const { changeUrl, data, error, execute, getRandomDogImage, isError, isLoading } = useGetRandomDogImage("mountain/bernese");
+
 
 	return (
 		<>
