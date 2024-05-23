@@ -7,7 +7,7 @@ const ChuckNorrisPage = () => {
 
 const { data, error, execute, isError, isLoading } = useChuckNorrisJoke();
   return (
-	<Container className='container'>
+	<Container>
 		<Container className='row d-flex justify-content-center'>
 			<Container className='col-6 col-md-6 col-sm-12 rounded border border-primary p-3'>
 				<h1>Chuck Norris says the truth:</h1>
@@ -18,9 +18,11 @@ const { data, error, execute, isError, isLoading } = useChuckNorrisJoke();
 				  </Alert>
 				)}
 
-				<p className='font-italic'>{data && `"${data.value}"`}</p>
+				{ data && (<p className='fst-italic'>{`"${data.value}"`}</p>)}
 
-				<Button onClick={() => execute()}>Get me another joke!</Button>
+				<Button
+				disabled={isLoading}
+				onClick={() => execute()}>{isLoading ? "Joke coming..." : "Get me joke!"}</Button>
 			</Container>
 		</Container>
 	</Container>
