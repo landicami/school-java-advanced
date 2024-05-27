@@ -6,6 +6,8 @@ import { Route, Routes } from "react-router-dom";
 import HomePage from "./pages/HomePage";
 import NotFoundPage from "./pages/NotFoundPage";
 import DadJokesPage from "./pages/DadJokesPage";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import RandomCatImage from "./pages/RandomCatImage";
 
 function App() {
 	return (
@@ -16,11 +18,14 @@ function App() {
 				<Routes>
 					<Route path="/" element={<HomePage />} />
 					<Route path="/dadjokes" element={<DadJokesPage />} />
+					<Route path="/catimage" element={<RandomCatImage />} />
 
 					<Route path="*" element={<NotFoundPage />} />
 
 				</Routes>
 			</Container>
+
+			<ReactQueryDevtools />
 		</div>
 	);
 }
