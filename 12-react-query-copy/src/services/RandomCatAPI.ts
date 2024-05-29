@@ -15,7 +15,7 @@ const API_KEY = import.meta.env.VITE_CAT_API
   });
 
 /**
- * Eexecute a HTTP GET request to an endpoint
+ * Execute a HTTP GET request to an endpoint
  *
  * @param endpoint Endpoint to HTTP GET
  */
