@@ -48,13 +48,18 @@ const HackerNewsPage = () => {
 			<Form.Control
 			placeholder="Haxxor news"
 			aria-label="Hacker news"
-			aria-describedby="basic-addon2"
+			aria-describedby="search-description"
 			onChange={e => setSearchInput(e.target.value)}
 			value={searchInput}
 			required
 			type="text"
 			/>
-			<Button type="submit" className="outline-primary" id="button-addon2">
+			<Button
+			type="submit"
+			className="outline-primary"
+			id="button-addon2"
+			disabled={hackerNews.isFetching}
+>
 			Search me some news
 			</Button>
 		</InputGroup>
