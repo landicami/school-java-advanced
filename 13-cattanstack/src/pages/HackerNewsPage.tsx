@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query'
-import React, { useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { searchByDate } from '../services/HackerNewsAPI'
 import LoadingSpinner from '../components/LoadingSpinner';
 import Button from "react-bootstrap/Button"
@@ -10,7 +10,7 @@ import { useSearchParams } from 'react-router-dom';
 
 const HackerNewsPage = () => {
 	// const [query, setQuery] = useState("");
-	const [page, setPage] = useState(0)
+	// const [page, setPage] = useState(0)
 	const [searchInput, setSearchInput] = useState("");
 
 	const [searchParams, setSearchParams] = useSearchParams();
@@ -18,10 +18,16 @@ const HackerNewsPage = () => {
 	const searchQuery = searchParams.get("query") || "";
 	const pageQuery = parseInt(searchParams.get("page") || "1");
 
-	const hackerNews
-	= useQuery({
-		queryKey: ["news", searchQuery, (pageQuery)],
-		queryFn: () => searchByDate(searchQuery, page),
+	const searchInputEl = useRef<HTMLInputElement>(null);
+
+	useEffect(() => {
+		searchInputEl.current?.focus();
+	}, []);
+
+
+	const hackerNews = useQuery({
+		queryKey: ["news", searchQuery, pageQuery],
+		queryFn: () => searchByDate(searchQuery, pageQuery),
 		enabled: !!searchQuery,
 	})
 
@@ -53,6 +59,7 @@ const HackerNewsPage = () => {
 			value={searchInput}
 			required
 			type="text"
+			ref={searchInputEl}
 			/>
 			<Button
 			type="submit"
@@ -64,6 +71,8 @@ const HackerNewsPage = () => {
 			</Button>
 		</InputGroup>
 	  </Form>
+
+	  {hackerNews.isError && <p>{hackerNews.error.message}</p>}
 
 	  {hackerNews.data && (
 	  <Container className='mt-3 col-8 d-flex justify-content-between'>
