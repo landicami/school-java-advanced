@@ -1,4 +1,4 @@
-import { useQuery } from '@tanstack/react-query'
+import { keepPreviousData, useQuery } from '@tanstack/react-query'
 import React, { useEffect, useRef, useState } from 'react'
 import { searchByDate } from '../services/HackerNewsAPI'
 import LoadingSpinner from '../components/LoadingSpinner';
@@ -15,20 +15,20 @@ const HackerNewsPage = () => {
 
 	const [searchParams, setSearchParams] = useSearchParams();
 
-	const searchQuery = searchParams.get("query") || "";
-	const pageQuery = parseInt(searchParams.get("page") || "1");
+	const searchQuery = searchParams.get("query") ?? "";
+	const pageQuery = parseInt(searchParams.get("page") ?? "1");
 
 	const searchInputEl = useRef<HTMLInputElement>(null);
 
-	useEffect(() => {
-		searchInputEl.current?.focus();
-	}, []);
+
 
 
 	const hackerNews = useQuery({
 		queryKey: ["news", searchQuery, pageQuery],
 		queryFn: () => searchByDate(searchQuery, pageQuery),
 		enabled: !!searchQuery,
+		placeholderData: keepPreviousData,   // show previous data (if available) while a new query is being fetched
+
 	})
 
 	const handleSubmit = (e: React.FormEvent) => {
@@ -41,6 +41,14 @@ const HackerNewsPage = () => {
 	};
 
 	console.log(hackerNews.data)
+
+	const handleReset = () => {
+
+	}
+
+	useEffect(() => {
+		searchInputEl.current?.focus();
+	}, []);
 
   return (
   	<Container>
@@ -78,7 +86,7 @@ const HackerNewsPage = () => {
 	  <Container className='mt-3 col-8 d-flex justify-content-between'>
 			<div className=''>
 				<Button
-				disabled={pageQuery === 0}
+				disabled={hackerNews.isFetching || pageQuery === 0}
 				onClick={() => handlePageChange(pageQuery - 1)}
 				>
 					Previous
@@ -89,7 +97,7 @@ const HackerNewsPage = () => {
 			</div>
 			<div>
 				<Button
-					disabled={pageQuery + 1 >= hackerNews.data.nbPages}
+					disabled={hackerNews.isFetching || pageQuery + 1 >= hackerNews.data.nbPages}
 					onClick={() => handlePageChange(pageQuery + 1)}>
 					Next
 				</Button>
