@@ -7,6 +7,7 @@ import Container from "react-bootstrap/Container"
 import Form from "react-bootstrap/Form"
 import InputGroup from "react-bootstrap/InputGroup"
 import { useSearchParams } from 'react-router-dom';
+import SearchHNListItem from '../components/SearchHNListItem';
 
 const HackerNewsPage = () => {
 	// const [query, setQuery] = useState("");
@@ -43,7 +44,9 @@ const HackerNewsPage = () => {
 	console.log(hackerNews.data)
 
 	const handleReset = () => {
-
+		setSearchInput("");
+		setSearchParams({ query: "", page: "0" });
+		searchInputEl.current?.focus();
 	}
 
 	useEffect(() => {
@@ -57,6 +60,7 @@ const HackerNewsPage = () => {
 
 		<Form
 		onSubmit={handleSubmit}
+		onReset={handleReset}
 		className='col-8'>
 		<InputGroup className="mb-3">
 			<Form.Control
@@ -77,6 +81,12 @@ const HackerNewsPage = () => {
 >
 			Search me some news
 			</Button>
+			<Button
+						type="reset"
+						variant="warning"
+					>
+						Clear
+					</Button>
 		</InputGroup>
 	  </Form>
 
@@ -108,13 +118,9 @@ const HackerNewsPage = () => {
 
 
 		{hackerNews.data && hackerNews.data.hits.map(news =>
-			<Container key={news.objectID} className='col-8 border'>
-				<div className='p-2 my-2'>
-					<h4><a href={news.url}>{news.title}</a></h4>
-					<span>{news.author} </span>
-					<span>| {news.created_at}</span>
-				</div>
-			</Container>
+			<SearchHNListItem
+			news={news}
+			key={news.objectID} />
 
 		)}
 
