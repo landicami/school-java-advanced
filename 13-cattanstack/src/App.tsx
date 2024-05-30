@@ -8,13 +8,16 @@ import NotFoundPage from "./pages/NotFoundPage";
 import RandomCatPage from "./pages/RandomCatPage";
 import "./assets/scss/App.scss";
 import HackerNewsPage from "./pages/HackerNewsPage";
+import useTheme from "./hooks/useTheme";
 
 function App() {
+	const { isDarkMode } = useTheme();
+
 	return (
 		<div id="App">
 			<Navigation />
 
-			<Container className="py-3">
+			<Container className={isDarkMode ? "bg-dark text-white" : "bg-white text-dark"}>
 				<Routes>
 					<Route path="/" element={<HomePage />} />
 					<Route path="/dad-joke" element={<ICanHazDadJokePage />} />
