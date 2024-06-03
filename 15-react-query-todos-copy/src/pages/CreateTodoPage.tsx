@@ -5,7 +5,6 @@ import AddNewTodoForm from "../components/AddNewTodoForm"
 import * as TodosAPI from "../services/TodosAPI";
 import { NewTodo, Todo } from "../services/TodosAPI.types";
 import { useMutation } from "@tanstack/react-query";
-import HamburgerLoadingSpinner from "../components/HamburgerSpinner";
 
 const CreateTodoPage = () => {
 	// const [createdTodo, setCreatedTodo] = useState<Todo | null>(null);

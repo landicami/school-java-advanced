@@ -2,18 +2,8 @@
   "todos": [
     {
       "id": 1,
-      "title": "Make coffee",
+      "title": "Drink Coffee",
       "completed": false
-    },
-    {
-      "id": 2,
-      "title": "Drink coffee",
-      "completed": true
-    },
-    {
-      "title": "Drink ALL the coffee 🤪",
-      "completed": true,
-      "id": 4
     }
   ]
 }

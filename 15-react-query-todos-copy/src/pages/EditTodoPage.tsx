@@ -4,8 +4,8 @@ import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import { useNavigate, useParams } from "react-router-dom";
 import * as TodosAPI from "../services/TodosAPI";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { Todo } from "../services/TodosAPI.types";
-import { useQuery } from "@tanstack/react-query";
 
 const EditTodoPage = () => {
 	// const [error, setError] = useState<string | false>(false);
@@ -22,6 +22,13 @@ const EditTodoPage = () => {
 		queryFn: () => TodosAPI.getTodo(todoId),
 	});
 
+	const mutateTodo = useMutation({
+		mutationFn: (data: Partial<Todo>) => TodosAPI.updateTodo(todoId, data),
+		onSuccess: () => {
+			navigate(`/todos/${todoId}`)
+		}
+	})
+
 	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
 
@@ -30,32 +37,29 @@ const EditTodoPage = () => {
 		}
 
 		// Call TodosAPI and update the todo
-		await TodosAPI.updateTodo(todo.data?.id, {
-			title: inputNewTodoTitle,
-		});
+		// await TodosAPI.updateTodo(todo.data?.id, {
+		// 	title: inputNewTodoTitle,
+		// });
+		mutateTodo.mutate({ title: inputNewTodoTitle});
 
 		// Redirect user to /todos/:id
-		navigate(`/todos/${todo.data?.id}`, {
-			state: {
-				status: {
-					message: `Todo "${todo.data?.title}" was deleted`,
-					type: "success",
-				}
-			}
-		});
+
 	}
 
 	useEffect(() => {
-		TodosAPI.getTodo(todoId);
-	}, [todoId]);
+		if(!todo.data){
+			return;
+		}
+		setInputNewTodoTitle(todo.data.title)
+	}, [todo]);
 
-	if (todo.error) {
+	if (todo.isError) {
 		return (
 			<Alert variant="warning">
 				<h1>Something went wrong!</h1>
 				<p>{todo.error.message}</p>
 
-				<Button variant="primary" onClick={() => TodosAPI.getTodo(todoId)}>TRY HARDER!!!</Button>
+				<Button variant="primary" onClick={() => todo.refetch()}>TRY HARDER!!!</Button>
 			</Alert>
 		)
 	}
@@ -67,6 +71,10 @@ const EditTodoPage = () => {
 	return (
 		<>
 			<h1 title={`Todo #${todo.data?.id}`}>Edit: {todo.data?.title}</h1>
+
+			{mutateTodo.isError && (mutateTodo.error.message)}
+
+			{mutateTodo.isSuccess && (<p>Todo updated successfully</p>)}
 
 			<Form onSubmit={handleSubmit} className="mb-3">
 				<Form.Group className="mb-3" controlId="title">

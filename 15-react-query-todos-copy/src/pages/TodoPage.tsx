@@ -6,7 +6,7 @@ import { Todo } from "../services/TodosAPI.types";
 import * as TodosAPI from "../services/TodosAPI";
 import ConfirmationModal from "../components/ConfirmationModal";
 import AutoDismissingAlert from "../components/AutoDismissingAlert";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 
 const TodoPage = () => {
 	const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -25,11 +25,14 @@ const TodoPage = () => {
 		queryFn: () => TodosAPI.getTodo(todoId),
 	});
 
+	const deleteMutatedTodo = useMutation({
+		mutationFn: () => TodosAPI.deleteTodo(todoId)
+	})
+
 	// Delete todo in API
 	const deleteTodo = async (todo: Todo) => {
 		// Call TodosAPI and delete the todo
-		await TodosAPI.deleteTodo(todo.id);
-
+		deleteMutatedTodo.mutate()
 		// Redirect to "/todos"
 		navigate("/todos", {
 			replace: true,
@@ -42,12 +45,15 @@ const TodoPage = () => {
 		});
 	}
 
+	const mutatedToggleTodo = useMutation({
+		mutationFn: (completed: boolean) => TodosAPI.updateTodo(todoId, {completed})
+	})
+
+
 	// Toggle todo in API
 	const toggleTodo = async (todo: Todo) => {
 		// Call TodosAPI and update the todo
-		await TodosAPI.updateTodo(todo.id, {
-			completed: !todo.completed,
-		});
+		mutatedToggleTodo.mutate(!todo.completed);
 
 		// Get the updated todo from the API
 		refetch();
@@ -81,7 +87,9 @@ const TodoPage = () => {
 			</p>
 
 			<div className="buttons mb-3">
-				<Button variant="success" onClick={() => toggleTodo(todo)}>Toggle</Button>
+				<Button variant="success"
+				disabled={mutatedToggleTodo.isPending}
+				onClick={() => toggleTodo(todo)}>Toggle</Button>
 
 				<Link to={`/todos/${todoId}/edit`} className="btn btn-warning" role="button">Edit</Link>
 
