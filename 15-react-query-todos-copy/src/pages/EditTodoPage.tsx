@@ -5,57 +5,40 @@ import Form from "react-bootstrap/Form";
 import { useNavigate, useParams } from "react-router-dom";
 import * as TodosAPI from "../services/TodosAPI";
 import { Todo } from "../services/TodosAPI.types";
+import { useQuery } from "@tanstack/react-query";
 
 const EditTodoPage = () => {
-	const [error, setError] = useState<string | false>(false);
-	const [isLoading, setIsLoading] = useState(true);
-	const [todo, setTodo] = useState<Todo | null>(null);
+	// const [error, setError] = useState<string | false>(false);
+	// const [isLoading, setIsLoading] = useState(true);
+	// const [todo, setTodo] = useState<Todo | null>(null);
 	const [inputNewTodoTitle, setInputNewTodoTitle] = useState("");
 	const { id } = useParams();
 	const todoId = Number(id);
 	const navigate = useNavigate();
 
-	// Get todo from API
-	const getTodo = async (id: number) => {
-		setError(false);
-		setIsLoading(true);
-		setTodo(null);
 
-		try {
-			// call TodosAPI
-			const data = await TodosAPI.getTodo(id);
-
-			// update todo state with data
-			setTodo(data);
-			setInputNewTodoTitle(data.title);
-		} catch (err) {
-			if (err instanceof Error) {
-				setError(err.message);
-			} else {
-				setError("ERROR: We've reached an unreachable state. Anything is possible. The limits were in our heads all along. Follow your dreams.");
-			}
-		}
-
-		setIsLoading(false);
-	}
+	const todo = useQuery({
+		queryKey: ["todo", todoId],
+		queryFn: () => TodosAPI.getTodo(todoId),
+	});
 
 	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
 
-		if (!todo) {
+		if (!todo.data) {
 			return;
 		}
 
 		// Call TodosAPI and update the todo
-		await TodosAPI.updateTodo(todo.id, {
+		await TodosAPI.updateTodo(todo.data?.id, {
 			title: inputNewTodoTitle,
 		});
 
 		// Redirect user to /todos/:id
-		navigate(`/todos/${todo.id}`, {
+		navigate(`/todos/${todo.data?.id}`, {
 			state: {
 				status: {
-					message: `Todo "${todo.title}" was deleted`,
+					message: `Todo "${todo.data?.title}" was deleted`,
 					type: "success",
 				}
 			}
@@ -63,27 +46,27 @@ const EditTodoPage = () => {
 	}
 
 	useEffect(() => {
-		getTodo(todoId);
+		TodosAPI.getTodo(todoId);
 	}, [todoId]);
 
-	if (error) {
+	if (todo.error) {
 		return (
 			<Alert variant="warning">
 				<h1>Something went wrong!</h1>
-				<p>{error}</p>
+				<p>{todo.error.message}</p>
 
-				<Button variant="primary" onClick={() => getTodo(todoId)}>TRY HARDER!!!</Button>
+				<Button variant="primary" onClick={() => TodosAPI.getTodo(todoId)}>TRY HARDER!!!</Button>
 			</Alert>
 		)
 	}
 
-	if (isLoading || !todo) {
+	if (todo.isFetching || !todo) {
 		return <p>Loading...</p>
 	}
 
 	return (
 		<>
-			<h1 title={`Todo #${todo.id}`}>Edit: {todo.title}</h1>
+			<h1 title={`Todo #${todo.data?.id}`}>Edit: {todo.data?.title}</h1>
 
 			<Form onSubmit={handleSubmit} className="mb-3">
 				<Form.Group className="mb-3" controlId="title">
