@@ -1,0 +1,29 @@
+{
+  "todos": [
+    {
+      "id": 1,
+      "title": "Make coffees",
+      "completed": true
+    },
+    {
+      "title": "Drink ALL the coffee 🤪",
+      "completed": false,
+      "id": 4
+    },
+    {
+      "title": "Learn about TMNT 🐢☢️",
+      "completed": true,
+      "id": 5
+    },
+    {
+      "title": "Learn about Me Invalidation ✋🏻",
+      "completed": true,
+      "id": 6
+    },
+    {
+      "title": "heyall",
+      "completed": true,
+      "id": 7
+    }
+  ]
+}
