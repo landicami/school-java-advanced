@@ -26,7 +26,17 @@ const TodoPage = () => {
 	});
 
 	const deleteMutatedTodo = useMutation({
-		mutationFn: () => TodosAPI.deleteTodo(todoId)
+		mutationFn: () => TodosAPI.deleteTodo(todoId),
+		onSuccess: () => {navigate("/todos", {
+			replace: true,
+			state: {
+				status: {
+					message: `Todo was deleted`,
+					type: "success",
+				}
+			}
+		});
+	}
 	})
 
 	// Delete todo in API
@@ -34,15 +44,7 @@ const TodoPage = () => {
 		// Call TodosAPI and delete the todo
 		deleteMutatedTodo.mutate()
 		// Redirect to "/todos"
-		navigate("/todos", {
-			replace: true,
-			state: {
-				status: {
-					message: `Todo "${todo.title}" was deleted`,
-					type: "success",
-				}
-			}
-		});
+
 	}
 
 	const mutatedToggleTodo = useMutation({

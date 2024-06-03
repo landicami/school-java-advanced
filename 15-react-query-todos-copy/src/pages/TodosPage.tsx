@@ -3,21 +3,25 @@ import Alert from "react-bootstrap/Alert";
 import { Link, useLocation } from "react-router-dom";
 import AutoDismissingAlert from "../components/AutoDismissingAlert";
 import TodoCounter from "../components/TodoCounter";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { getTodos } from "../services/TodosAPI";
 import { useEffect } from "react";
 
 function TodosPage() {
 	const location = useLocation();
+	// Get QueryClient from the context
+	const queryClient = useQueryClient()
+
+	queryClient.invalidateQueries({ queryKey: ['todos'] })
 
 	const todos = useQuery({
 		queryKey: ["todos"],
 		queryFn: getTodos,
 	})
 
-	useEffect(()=> {
-		todos.refetch()
-},[])
+// 	useEffect(()=> {
+// 		todos.refetch()
+// },[])
 
 
 

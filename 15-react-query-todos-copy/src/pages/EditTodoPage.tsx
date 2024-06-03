@@ -4,7 +4,7 @@ import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import { useNavigate, useParams } from "react-router-dom";
 import * as TodosAPI from "../services/TodosAPI";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Todo } from "../services/TodosAPI.types";
 
 const EditTodoPage = () => {
@@ -16,17 +16,25 @@ const EditTodoPage = () => {
 	const todoId = Number(id);
 	const navigate = useNavigate();
 
+	// Get QueryClient from the context
+	const queryClient = useQueryClient()
+
+
+
 
 	const todo = useQuery({
-		queryKey: ["todo", todoId],
+		queryKey: ["todo", {id: todoId}],
 		queryFn: () => TodosAPI.getTodo(todoId),
 	});
 
-	const mutateTodo = useMutation({
+
+
+	const updatemutateTodo = useMutation({
 		mutationFn: (data: Partial<Todo>) => TodosAPI.updateTodo(todoId, data),
 		onSuccess: () => {
 			navigate(`/todos/${todoId}`)
 		}
+
 	})
 
 	const handleSubmit = async (e: React.FormEvent) => {
@@ -40,7 +48,8 @@ const EditTodoPage = () => {
 		// await TodosAPI.updateTodo(todo.data?.id, {
 		// 	title: inputNewTodoTitle,
 		// });
-		mutateTodo.mutate({ title: inputNewTodoTitle});
+		updatemutateTodo.mutate({ title: inputNewTodoTitle});
+
 
 		// Redirect user to /todos/:id
 
@@ -52,6 +61,10 @@ const EditTodoPage = () => {
 		}
 		setInputNewTodoTitle(todo.data.title)
 	}, [todo]);
+
+
+
+
 
 	if (todo.isError) {
 		return (
@@ -72,9 +85,9 @@ const EditTodoPage = () => {
 		<>
 			<h1 title={`Todo #${todo.data?.id}`}>Edit: {todo.data?.title}</h1>
 
-			{mutateTodo.isError && (mutateTodo.error.message)}
+			{updatemutateTodo.isError && (updatemutateTodo.error.message)}
 
-			{mutateTodo.isSuccess && (<p>Todo updated successfully</p>)}
+			{updatemutateTodo.isSuccess && (<p>Todo updated successfully</p>)}
 
 			<Form onSubmit={handleSubmit} className="mb-3">
 				<Form.Group className="mb-3" controlId="title">
