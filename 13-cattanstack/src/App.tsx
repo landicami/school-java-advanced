@@ -17,6 +17,7 @@ function App() {
 		<div id="App">
 			<Navigation />
 
+
 			<Container className={isDarkMode ? "bg-dark text-white" : "bg-white text-dark"}>
 				<Routes>
 					<Route path="/" element={<HomePage />} />

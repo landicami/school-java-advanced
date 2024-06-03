@@ -1,29 +1,25 @@
-import { useEffect, useState } from "react";
 import ListGroup from "react-bootstrap/ListGroup";
+import Alert from "react-bootstrap/Alert";
 import { Link, useLocation } from "react-router-dom";
 import AutoDismissingAlert from "../components/AutoDismissingAlert";
 import TodoCounter from "../components/TodoCounter";
-import * as TodosAPI from "../services/TodosAPI";
-import { Todo } from "../services/TodosAPI.types";
+import { useQuery } from "@tanstack/react-query";
+import { getTodos } from "../services/TodosAPI";
+import { useEffect } from "react";
 
 function TodosPage() {
-	const [todos, setTodos] = useState<Todo[] | null>(null);
 	const location = useLocation();
 
-	const getTodos = async () => {
-		setTodos(null);
+	const todos = useQuery({
+		queryKey: ["todos"],
+		queryFn: getTodos,
+	})
 
-		// make request to api
-		const data = await TodosAPI.getTodos();
+	useEffect(()=> {
+		todos.refetch()
+},[])
 
-		setTodos(data);
-	}
 
-	console.log("Component is rendering");
-
-	useEffect(() => {
-		getTodos();
-	}, []);
 
 	return (
 		<>
@@ -38,10 +34,12 @@ function TodosPage() {
 				</AutoDismissingAlert>
 			)}
 
-			{todos && todos.length > 0 && (
+			{todos.isError && <Alert>{todos.error.message}</Alert>}
+
+			{todos.data && todos.data.length > 0 && (
 				<>
 					<ListGroup className="todolist">
-						{todos.map(todo => (
+						{todos.data.map(todo => (
 							<ListGroup.Item
 								action
 								as={Link}
@@ -54,11 +52,11 @@ function TodosPage() {
 						))}
 					</ListGroup>
 
-					<TodoCounter finished={todos.filter(todo => todo.completed).length} total={todos.length} />
+					<TodoCounter finished={todos.data.filter(todo => todo.completed).length} total={todos.data.length} />
 				</>
 			)}
 
-			{todos && !todos.length && (
+			{todos.data && !todos.data.length && (
 				<div className="alert alert-success">You ain't got no todos 🤩!</div>
 			)}
 		</>

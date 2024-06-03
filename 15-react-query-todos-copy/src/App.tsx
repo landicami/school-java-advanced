@@ -9,11 +9,13 @@ import TodosPage from "./pages/TodosPage";
 import TodoPage from "./pages/TodoPage";
 import "./assets/scss/App.scss";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import HamburgerLoadingSpinner from "./components/HamburgerSpinner";
 
 function App() {
 	return (
 		<div id="App">
 			<Navigation />
+			<HamburgerLoadingSpinner />
 
 			<Container className="py-3">
 				<Routes>

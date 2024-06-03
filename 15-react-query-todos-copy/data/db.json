@@ -12,13 +12,28 @@
     },
     {
       "title": "Drink ALL the coffee 🤪",
-      "completed": false,
+      "completed": true,
       "id": 4
     },
     {
       "title": "i cant remember",
       "completed": false,
       "id": 5
+    },
+    {
+      "title": "ciao",
+      "completed": false,
+      "id": 6
+    },
+    {
+      "title": "now?",
+      "completed": false,
+      "id": 9
+    },
+    {
+      "title": "hey",
+      "completed": true,
+      "id": 10
     }
   ]
 }
