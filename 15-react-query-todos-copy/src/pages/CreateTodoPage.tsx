@@ -5,6 +5,7 @@ import AddNewTodoForm from "../components/AddNewTodoForm"
 import * as TodosAPI from "../services/TodosAPI";
 import { NewTodo, Todo } from "../services/TodosAPI.types";
 import { useMutation } from "@tanstack/react-query";
+import HamburgerLoadingSpinner from "../components/HamburgerSpinner";
 
 const CreateTodoPage = () => {
 	// const [createdTodo, setCreatedTodo] = useState<Todo | null>(null);
@@ -27,13 +28,14 @@ const CreateTodoPage = () => {
 		<>
 			<h1>Create a new Todo</h1>
 
-			{mutation.error && <Alert variant="warning">{mutation.error.message}</Alert>}
+
+			{mutation.isError && <Alert variant="warning">{mutation.error.message}</Alert>}
 
 			<AddNewTodoForm
 				onAddTodo={addTodo}
 			/>
 
-			{mutation.data && (
+			{mutation.isSuccess && (
 				<Alert variant="success">
 					<h2 className="h5">Created todo successfully</h2>
 					<p>Redirecting back to all todos in 2 seconds...</p>

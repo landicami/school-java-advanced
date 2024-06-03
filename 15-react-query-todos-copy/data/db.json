@@ -3,7 +3,7 @@
     {
       "id": 1,
       "title": "Make coffee",
-      "completed": true
+      "completed": false
     },
     {
       "id": 2,
@@ -14,26 +14,6 @@
       "title": "Drink ALL the coffee 🤪",
       "completed": true,
       "id": 4
-    },
-    {
-      "title": "i cant remember",
-      "completed": false,
-      "id": 5
-    },
-    {
-      "title": "ciao",
-      "completed": false,
-      "id": 6
-    },
-    {
-      "title": "now?",
-      "completed": false,
-      "id": 9
-    },
-    {
-      "title": "hey",
-      "completed": true,
-      "id": 10
     }
   ]
 }
