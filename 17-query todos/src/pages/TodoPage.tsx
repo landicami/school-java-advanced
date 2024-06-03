@@ -14,6 +14,9 @@ const TodoPage = () => {
 	const location = useLocation();
 	const navigate = useNavigate();
 
+	const [queryEnable, setQueryEnable ] = useState(true)
+	//state för att inte återhämta den deleteade datan
+
 	const queryClient = useQueryClient();
 
 	const {
@@ -25,11 +28,13 @@ const TodoPage = () => {
 	} = useQuery({
 		queryKey: ["todo", { id: todoId }],
 		queryFn: () => getTodo(todoId),
+		enabled: queryEnable
 	});
 
 	const deleteTodoMutation = useMutation({
 		mutationFn: () => deleteTodo(todoId),
 		onSuccess: () => {
+			setQueryEnable(false);
 			queryClient.removeQueries({queryKey: ["todos", { id: todoId}]});
 			queryClient.invalidateQueries({queryKey: ["todos"]})
 			// Redirect to "/todos"
