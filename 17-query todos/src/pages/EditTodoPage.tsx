@@ -20,6 +20,7 @@ const EditTodoPage = () => {
 		await queryClient.prefetchQuery({
 		  queryKey: ['todos'],
 		  queryFn: getTodos,
+		  staleTime: 0,
 		})
 	  };
 

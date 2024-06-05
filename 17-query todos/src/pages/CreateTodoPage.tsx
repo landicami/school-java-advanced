@@ -2,18 +2,39 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import Alert from "react-bootstrap/Alert";
 import { Link, useNavigate } from "react-router-dom";
 import AddNewTodoForm from "../components/AddNewTodoForm"
-import { createTodo } from "../services/TodosAPI";
+import { createTodo, getTodos } from "../services/TodosAPI";
 import { NewTodo, Todo } from "../services/TodosAPI.types";
 
 const CreateTodoPage = () => {
 	const navigate = useNavigate();
 	const queryClient = useQueryClient()
 
+	const prefetchTodos = async () => {
+		// The results of this query will be cached like a normal query
+		await queryClient.prefetchQuery({
+		  queryKey: ['todos'],
+		  queryFn: getTodos,
+		  staleTime: 0,
+		})
+	  };
+
+
 	const createTodoMutation = useMutation({
 		mutationFn: createTodo,
 		onSuccess: (newData) => {
-			queryClient.setQueryData<Todo[]>(["todos"],
-			(oldData = []) => [...oldData, newData])
+			prefetchTodos();
+
+			queryClient.setQueryData<Todo[]>(["todos"],(oldData) =>
+			{
+				return [
+					...oldData ?? [],
+				 	newData]
+			})
+
+			queryClient.setQueryData(["todo", { id: newData.id}], newData)
+			prefetchTodos();
+
+
 			// queryClient.invalidateQueries({ queryKey: ["todos"]})
 			setTimeout(() => {
 			navigate("/todos");

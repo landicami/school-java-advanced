@@ -3,9 +3,10 @@ import { useState } from "react";
 import Alert from "react-bootstrap/Alert";
 import Button from "react-bootstrap/Button";
 import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
-import { deleteTodo, getTodo, updateTodo } from "../services/TodosAPI";
+import { deleteTodo, getTodo, getTodos, updateTodo } from "../services/TodosAPI";
 import ConfirmationModal from "../components/ConfirmationModal";
 import AutoDismissingAlert from "../components/AutoDismissingAlert";
+import { Todo } from "../services/TodosAPI.types";
 
 const TodoPage = () => {
 	const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -18,6 +19,15 @@ const TodoPage = () => {
 	//state för att inte återhämta den deleteade datan
 
 	const queryClient = useQueryClient();
+
+	const prefetchTodos = async () => {
+		// The results of this query will be cached like a normal query
+		await queryClient.prefetchQuery({
+		  queryKey: ['todos'],
+		  queryFn: getTodos,
+		  staleTime: 0, //always prefetch even if existing data isnt stale
+		})
+	  };
 
 	const {
 		data: todo,
@@ -35,8 +45,14 @@ const TodoPage = () => {
 		mutationFn: () => deleteTodo(todoId),
 		onSuccess: () => {
 			setQueryEnable(false);
+			prefetchTodos();
 			queryClient.removeQueries({queryKey: ["todos", { id: todoId}]});
-			queryClient.invalidateQueries({queryKey: ["todos"]})
+			queryClient.setQueryData<Todo[]>(["todos"], (oldTodos = []) => {
+
+				const newTodos = oldTodos.filter(todo => todo.id !== todoId);
+				return newTodos;
+			});
+			// queryClient.invalidateQueries({queryKey: ["todos"]})
 			// Redirect to "/todos"
 			navigate("/todos", {
 				replace: true,
@@ -52,10 +68,10 @@ const TodoPage = () => {
 
 	const updateTodoCompletedMutation = useMutation({
 		mutationFn: (completed: boolean) => updateTodo(todoId, { completed }),
-		onSuccess: () => {
-			queryClient.invalidateQueries({queryKey: ["todo", {id: todoId}]});
-			queryClient.invalidateQueries({queryKey: ["todos"]})
-
+		onSuccess: (data) => {
+			queryClient.setQueryData(["todo", {id: todoId}], data);
+			// queryClient.invalidateQueries({queryKey: ["todos"]})
+			prefetchTodos();
 		}
 	});
 
