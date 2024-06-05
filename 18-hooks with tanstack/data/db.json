@@ -1,0 +1,24 @@
+{
+  "todos": [
+    {
+      "id": 1,
+      "title": "Make coffee",
+      "completed": true
+    },
+    {
+      "title": "Drink ALL ZE coffee 😋☕️",
+      "completed": false,
+      "id": 4
+    },
+    {
+      "title": "Learn about TMNT 🐢☢️",
+      "completed": false,
+      "id": 5
+    },
+    {
+      "title": "Learn about Query Invalidation ✋🏻",
+      "completed": false,
+      "id": 6
+    }
+  ]
+}
