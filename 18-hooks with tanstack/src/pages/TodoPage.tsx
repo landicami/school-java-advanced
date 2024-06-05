@@ -7,12 +7,13 @@ import { deleteTodo, getTodo, getTodos, updateTodo } from "../services/TodosAPI"
 import ConfirmationModal from "../components/ConfirmationModal";
 import AutoDismissingAlert from "../components/AutoDismissingAlert";
 import { Todo } from "../services/TodosAPI.types";
+import useTodo from "../hooks/useTodo";
 
 const TodoPage = () => {
-	const [queryEnabled, setQueryEnabled] = useState(true);
+	// const [queryEnabled, setQueryEnabled] = useState(true);
 	const [showDeleteModal, setShowDeleteModal] = useState(false);
-	const { id } = useParams();
-	const todoId = Number(id);
+	// const { id } = useParams();
+	// const todoId = Number(id);
 	const location = useLocation();
 	const navigate = useNavigate();
 	const queryClient = useQueryClient();
@@ -23,11 +24,9 @@ const TodoPage = () => {
 		isError,
 		isLoading,
 		isSuccess,
-	} = useQuery({
-		queryKey: ["todo", { id: todoId }],
-		queryFn: () => getTodo(todoId),
-		enabled: queryEnabled,
-	});
+		setQueryEnabled,
+		id: todoId
+	} = useTodo()
 
 	const deleteTodoMutation = useMutation({
 		mutationFn: () => deleteTodo(todoId),
