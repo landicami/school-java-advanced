@@ -4,7 +4,7 @@ import Alert from "react-bootstrap/Alert";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { getTodo, updateTodo } from "../services/TodosAPI";
+import { getTodo, getTodos, updateTodo } from "../services/TodosAPI";
 import { Todo } from "../services/TodosAPI.types";
 
 const EditTodoPage = () => {
@@ -15,6 +15,13 @@ const EditTodoPage = () => {
 
 	const queryClient = useQueryClient()
 
+	const prefetchTodos = async () => {
+		// The results of this query will be cached like a normal query
+		await queryClient.prefetchQuery({
+		  queryKey: ['todos'],
+		  queryFn: getTodos,
+		})
+	  };
 
 
 	const {
@@ -30,9 +37,15 @@ const EditTodoPage = () => {
 
 	const updateTodoMutation = useMutation({
 		mutationFn: (data: Partial<Todo>) => updateTodo(todoId, data),
-		onSuccess: () => {
-			queryClient.invalidateQueries({queryKey: ["todo", {id: todoId}]});
-			queryClient.invalidateQueries({queryKey: ["todos"]})
+		onSuccess: (data) => {
+
+			queryClient.setQueryData(["todo", {id: todoId}], data)
+
+			// queryClient.invalidateQueries({queryKey: ["todo", {id: todoId}]});
+			// queryClient.invalidateQueries({queryKey: ["todos"]})
+			prefetchTodos();
+
+
 			// Redirect user back to /todos/:id
 			navigate(`/todos/${todoId}`);
 		}

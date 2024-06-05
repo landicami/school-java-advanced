@@ -3,6 +3,7 @@ import Alert from "react-bootstrap/Alert";
 import { Link, useNavigate } from "react-router-dom";
 import AddNewTodoForm from "../components/AddNewTodoForm"
 import { createTodo } from "../services/TodosAPI";
+import { NewTodo, Todo } from "../services/TodosAPI.types";
 
 const CreateTodoPage = () => {
 	const navigate = useNavigate();
@@ -10,8 +11,10 @@ const CreateTodoPage = () => {
 
 	const createTodoMutation = useMutation({
 		mutationFn: createTodo,
-		onSuccess: () => {
-			queryClient.invalidateQueries({ queryKey: ["todos"]})
+		onSuccess: (newData) => {
+			queryClient.setQueryData<Todo[]>(["todos"],
+			(oldData = []) => [...oldData, newData])
+			// queryClient.invalidateQueries({ queryKey: ["todos"]})
 			setTimeout(() => {
 			navigate("/todos");
 		}, 2000);
