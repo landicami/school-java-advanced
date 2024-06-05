@@ -1,22 +1,19 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import Alert from "react-bootstrap/Alert";
 import Button from "react-bootstrap/Button";
-import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
-import { deleteTodo, getTodo, getTodos, updateTodo } from "../services/TodosAPI";
+import { Link, useLocation, useParams } from "react-router-dom";
 import ConfirmationModal from "../components/ConfirmationModal";
 import AutoDismissingAlert from "../components/AutoDismissingAlert";
-import { Todo } from "../services/TodosAPI.types";
 import useTodo from "../hooks/useTodo";
+import useUpdatedTodo from "../hooks/useUpdatedTodo";
+import useDeleteTodo from "../hooks/useDeleteTodo";
 
 const TodoPage = () => {
-	// const [queryEnabled, setQueryEnabled] = useState(true);
+	const [queryEnabled, setQueryEnabled] = useState(true);
 	const [showDeleteModal, setShowDeleteModal] = useState(false);
-	// const { id } = useParams();
-	// const todoId = Number(id);
+	const { id } = useParams();
+	const todoId = Number(id);
 	const location = useLocation();
-	const navigate = useNavigate();
-	const queryClient = useQueryClient();
 
 	const {
 		data: todo,
@@ -24,59 +21,12 @@ const TodoPage = () => {
 		isError,
 		isLoading,
 		isSuccess,
-		setQueryEnabled,
-		id: todoId
-	} = useTodo()
+	} = useTodo(todoId, queryEnabled)
 
-	const deleteTodoMutation = useMutation({
-		mutationFn: () => deleteTodo(todoId),
-		onSuccess: async () => {
-			// disable query for this specific single todo
-			setQueryEnabled(false);
+	const deleteTodoMutation = useDeleteTodo(todoId, () => {
+		setQueryEnabled(false)})
 
-			// make sure we have ["todos"] in the cache
-			await queryClient.prefetchQuery({
-				queryKey: ["todos"],
-				queryFn: getTodos,
-			});
-
-			// remove the current query from the cache
-			queryClient.removeQueries({ queryKey: ["todo", { id: todoId }] });
-
-			// construct new data where the deleted todo is removed
-			// and set it as the ["todos"] data
-			queryClient.setQueryData<Todo[]>(["todos"], (oldTodos) => {
-				return oldTodos?.filter(todo => todo.id !== todoId) ?? [];
-			});
-
-			// Redirect to "/todos"
-			navigate("/todos", {
-				replace: true,
-				state: {
-					status: {
-						message: `Todo was deleted`,
-						type: "success",
-					}
-				}
-			});
-		},
-	});
-
-	const updateTodoCompletedMutation = useMutation({
-		mutationFn: (completed: boolean) => updateTodo(todoId, { completed }),
-		onSuccess: async (updatedTodo) => {
-			// set the response from the mutation as the query cache for this todo
-			queryClient.setQueryData(["todo", { id: todoId }], updatedTodo);
-
-			// prefetch ["todos"] query as it is very likely that the user will
-			// return to the list of all todos as their next step
-			await queryClient.prefetchQuery({
-				queryKey: ["todos"],
-				queryFn: getTodos,
-				staleTime: 0,   // always prefetch, even if the existing data is considered fresh 🌱
-			});
-		}
-	});
+	const updateTodoCompletedMutation = useUpdatedTodo(todoId)
 
 	if (isLoading) {
 		return <p>Loading...</p>
@@ -110,7 +60,7 @@ const TodoPage = () => {
 			<div className="buttons mb-3">
 				<Button
 					disabled={updateTodoCompletedMutation.isPending || deleteTodoMutation.isPending}
-					onClick={() => updateTodoCompletedMutation.mutate(!todo.completed)}
+					onClick={() => updateTodoCompletedMutation.mutate({completed: !todo.completed})}
 					variant="success"
 				>Toggle</Button>
 

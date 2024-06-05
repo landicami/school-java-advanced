@@ -1,24 +1,13 @@
 import { useQuery } from '@tanstack/react-query';
-import { useState } from 'react';
 import { getTodo } from '../services/TodosAPI';
-import { useParams } from 'react-router-dom';
 
-const useTodo = () => {
-  const { id } = useParams();
-  const todoId = Number(id);
-  const [queryEnabled, setQueryEnabled] = useState(true);
+const useTodo = (todoId: number, enabled = true) => {
 
-  const query = useQuery({
+  return useQuery({
     queryKey: ["todo", { id: todoId }],
     queryFn: () => getTodo(todoId),
-    enabled: !!queryEnabled,
+    enabled
   });
-
-  return {
-    ...query,
-    setQueryEnabled,
-    id: todoId,
-  };
 }
 
 export default useTodo;
