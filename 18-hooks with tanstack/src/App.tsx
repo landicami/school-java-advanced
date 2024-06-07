@@ -10,6 +10,8 @@ import NotFoundPage from "./pages/NotFoundPage";
 import TodosPage from "./pages/TodosPage";
 import TodoPage from "./pages/TodoPage";
 import "./assets/scss/App.scss";
+import { ToastContainer } from 'react-toastify';
+
 
 function App() {
 	return (
@@ -30,6 +32,9 @@ function App() {
 			</Container>
 
 			<ReactQueryDevtools />
+			<ToastContainer
+			closeOnClick
+			 />
 		</div>
 	)
 }
