@@ -1,11 +1,13 @@
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import WarningAlert from "../components/alerts/WarningAlert";
 import useAuthor from "../hooks/useAuthor";
+import { Button } from "react-bootstrap";
 
 const AuthorPage = () => {
 	const { id } = useParams();
 	const authorId = Number(id);
 	const { data: author, isError, isLoading } = useAuthor(authorId);
+	const navigate = useNavigate();
 
 	return (
 		<>
@@ -30,6 +32,8 @@ const AuthorPage = () => {
 					</ul>
 				</>
 			)}
+			<Button onClick={() => {navigate(-1)}}>Tillbaka</Button>
+
 		</>
 	);
 };
