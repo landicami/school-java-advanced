@@ -83,6 +83,55 @@
       "published": 1792,
       "pages": 650,
       "id": 12
+    },
+    {
+      "title": "Will this works",
+      "pages": "209",
+      "published": "1987",
+      "authorId": 8,
+      "id": 13
+    },
+    {
+      "title": "Saltkråkan",
+      "pages": "999",
+      "published": "1987",
+      "authorId": 11,
+      "id": 14
+    },
+    {
+      "title": "ciao",
+      "pages": "234",
+      "published": "1987",
+      "authorId": 11,
+      "id": 15
+    },
+    {
+      "title": "now",
+      "pages": "1987",
+      "published": "2912",
+      "authorId": 11,
+      "id": 16
+    },
+    {
+      "title": "New book for Hasse",
+      "pages": "999",
+      "published": "1999",
+      "authorId": 12,
+      "id": 17
+    },
+    {
+      "title": "A book for Ciao",
+      "pages": "1987",
+      "published": "1987",
+      "authorId": 10,
+      "id": 18
+    },
+    {
+      "title": "Isac book",
+      "pages": "234",
+      "published": "1984",
+      "authorId": 3,
+      "id": 19
     }
   ],
   "authors": [
@@ -130,6 +179,21 @@
       "id": 9,
       "name": "Mr Fancy Pants",
       "date_of_birth": "1930-01-01"
+    },
+    {
+      "name": "Ciao",
+      "date_of_birth": "1988-04-29",
+      "id": 10
+    },
+    {
+      "name": "AstridLindgren",
+      "date_of_birth": "1907-12-11",
+      "id": 11
+    },
+    {
+      "name": "Hasse A",
+      "date_of_birth": "2002-09-11",
+      "id": 12
     }
   ]
 }
