@@ -6,6 +6,7 @@ import TanstackBasicTable from "../components/TanstackBasictable";
 import useBooks from "../hooks/useBooks";
 import { ColumnDef } from "@tanstack/react-table";
 import { Book } from "../services/BooksAPI.types";
+import TanstackSortableTable from "../components/TanstackSortableTable";
 
 const colums: ColumnDef<Book>[] = [
 	{
@@ -47,7 +48,7 @@ const BooksPage = () => {
 
 			{/* {books && <BSBookTable2 books={books} />} */}
 						{books &&
-						<TanstackBasicTable
+						<TanstackSortableTable
 						data={books}
 						columns={colums} />}
 
