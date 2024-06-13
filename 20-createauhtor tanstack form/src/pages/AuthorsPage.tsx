@@ -62,6 +62,8 @@ const columns = [
 	}),
 ];
 
+
+
 const AuthorsPage = () => {
 	const { data: authors, isError, isLoading } = useAuthors();
 

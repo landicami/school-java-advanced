@@ -4,21 +4,32 @@ import Form from "react-bootstrap/Form";
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { NewBook } from '../../services/BooksAPI.types'
 import useCreateBook from '../../hooks/useCreateBook'
+import { useEffect } from "react";
 
 interface CreateBookProps{
 	authorId: number;
 }
 
 const CreateBookForm: React.FC<CreateBookProps> = ({ authorId } ) => {
-	const {handleSubmit, register, formState: {errors}} = useForm<NewBook>()
+	const {handleSubmit, register, formState: {errors, isSubmitSuccessful}, reset} = useForm<NewBook>()
 	const mutateBook = useCreateBook();
 
 	const onCreateBookSubmit: SubmitHandler<NewBook> = (data) => {
 		const newData = { ...data, authorId };
-
 		mutateBook.mutate(newData)
+		// mutateBook.mutate(newData, {
+		// 	onSuccess: () => {
+		// 		reset();
+		// 	}
+		// })
+
 
 	}
+
+	useEffect(()=> {
+		reset();
+	},[isSubmitSuccessful, reset])
+
 	return (
 		<Form onSubmit={handleSubmit(onCreateBookSubmit)}>
 			<Form.Group controlId='title'>
@@ -55,7 +66,7 @@ const CreateBookForm: React.FC<CreateBookProps> = ({ authorId } ) => {
 			</Form.Group>
 
 			<div className="mt-2 d-flex justify-content-end">
-				<Button variant="success" type="submit">
+				<Button variant="success" type="submit" disabled={mutateBook.isPending}>
 					Create
 				</Button>
 			</div>

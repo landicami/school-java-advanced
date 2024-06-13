@@ -132,6 +132,41 @@
       "published": "1984",
       "authorId": 3,
       "id": 19
+    },
+    {
+      "title": "hej",
+      "pages": "1223",
+      "published": "1234",
+      "authorId": 12,
+      "id": 20
+    },
+    {
+      "title": "hej hej",
+      "pages": "1984",
+      "published": "1292",
+      "authorId": 3,
+      "id": 21
+    },
+    {
+      "title": "yayayay",
+      "pages": "134",
+      "published": "1999",
+      "authorId": 7,
+      "id": 22
+    },
+    {
+      "title": "hej",
+      "pages": "1988",
+      "published": "1988",
+      "authorId": 13,
+      "id": 23
+    },
+    {
+      "title": "a book",
+      "pages": "1234",
+      "published": "1567",
+      "authorId": 1,
+      "id": 24
     }
   ],
   "authors": [
@@ -194,6 +229,11 @@
       "name": "Hasse A",
       "date_of_birth": "2002-09-11",
       "id": 12
+    },
+    {
+      "name": "mamma mia",
+      "date_of_birth": "1988-04-29",
+      "id": 13
     }
   ]
 }

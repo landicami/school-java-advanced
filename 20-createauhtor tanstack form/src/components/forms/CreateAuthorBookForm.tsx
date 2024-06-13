@@ -6,6 +6,8 @@ import { NewBook } from '../../services/BooksAPI.types'
 import useCreateBook from '../../hooks/useCreateBook'
 import { useParams } from "react-router-dom";
 
+const currentYear =  new Date().getFullYear();
+
 const CreateAuthorBookForm = () => {
 	const {id} = useParams();
 	const authorId = Number(id);
@@ -27,7 +29,7 @@ const CreateAuthorBookForm = () => {
 					type="text"
 					{...register("title", {required: true, minLength: 3})}
 				/>
-				{errors.title && <span>This field is required and have at least tre chars.</span>}
+				{errors.title && <span className="text-danger">This field is required and have at least tre chars.</span>}
 
 			</Form.Group>
 
@@ -36,9 +38,9 @@ const CreateAuthorBookForm = () => {
 				<Form.Control
 					placeholder='Fill in how many pages the book has'
 					type="number"
-					{...register("pages", {required: true, minLength: 1})}
+					{...register("pages", {required: true, min: 1})}
 				/>
-				{errors.pages && <span>This field is required and have at least 1 char.</span>}
+				{errors.pages && <span className="text-danger">Don't use negative numbers.</span>}
 
 			</Form.Group>
 
@@ -47,9 +49,9 @@ const CreateAuthorBookForm = () => {
 				<Form.Control
 					placeholder='Published'
 					type="number"
-					{...register("published", {required: true, minLength: 1})}
+					{...register("published", {required: true, min: 1455, max: currentYear})}
 				/>
-				{errors.published && <span>This field is required and have at least 1 char.</span>}
+				{errors.published && <span className="text-danger">Year of publication has to be between 1455 and current year</span>}
 
 			</Form.Group>
 
