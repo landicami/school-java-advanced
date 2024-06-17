@@ -19,8 +19,10 @@ const useCreateAuthor = () => {
 			);
 		},
 		onSuccess: (newAuthor) => {
-			queryClient.setQueryData<Author[]>(["authors"], (prevAuthors) => {
-				return [...(prevAuthors ?? []), newAuthor];
+			// invalidate the authors list (or use the fetchQuery + setQueryData
+			// from `09-react-query-todos/src/hooks/useCreateTodo.ts`)
+			queryClient.invalidateQueries({
+				queryKey: ["authors"],
 			});
 
 			// also insert the new author into the query cache

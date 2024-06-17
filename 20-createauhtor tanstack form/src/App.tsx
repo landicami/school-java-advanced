@@ -11,6 +11,7 @@ import HomePage from "./pages/HomePage";
 import NotFoundPage from "./pages/NotFoundPage";
 import "./assets/scss/App.scss";
 import CreateBookPage from "./pages/CreateBookPage";
+import EditAuthorPage from "./pages/EditAuthorPage";
 
 function App() {
 	return (
@@ -26,6 +27,7 @@ function App() {
 					<Route path="/authors/:id" element={<AuthorPage />} />
 					<Route path="/books" element={<BooksPage />} />
 					<Route path="/create" element={<CreateBookPage/>} />
+					<Route path="/authors/:id/edit" element={<EditAuthorPage />} />
 
 					<Route path="*" element={<NotFoundPage />} />
 				</Routes>

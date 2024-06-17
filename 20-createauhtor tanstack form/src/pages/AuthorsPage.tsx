@@ -55,6 +55,10 @@ const columns = [
 						>
 							View
 						</Link>
+						<Link className="btn btn-warning btn-sm"
+							to={"/authors/" + props.row.original.id + "/edit"}>
+							Edit
+						</Link>
 					</div>
 				),
 			}),
