@@ -5,32 +5,37 @@ import AutoDismissingAlert from "../components/AutoDismissingAlert";
 import TodoCounter from "../components/TodoCounter";
 import useStatusLocation from "../hooks/useStatusLocation";
 import { NewTodo, Todo } from "../types/Todo.types";
+import { databas, todosCol } from "../services/firebase";
+import { useEffect, useState } from "react";
+import { CollectionReference, collection,getDocs } from "firebase/firestore";
 
-const todos: Todo[] = [
-	{
-		_id: "Akpxptx7jdJ7SCOIuD16",
-		title: "Learn React 😊",
-		completed: true,
-	},
-	{
-		_id: "T4MKhcTg5bOHz80TOXwd",
-		title: "Learn Firebase 🔥",
-		completed: false,
-	},
-	{
-		_id: "fTZcsgGFiffA4DadSmQ2",
-		title: "Profit 💰",
-		completed: false,
-	},
-	{
-		_id: "pTLjnG6VDRMwnUqXzTV7",
-		title: "Take over the world 😈",
-		completed: false,
-	},
-];
+
 
 function TodosPage() {
+	const [todos, setTodos] = useState<Todo[] | null>(null);
+	const [loading, setLoading] = useState(true);
 	const location = useStatusLocation();
+
+	const getTodos = async ()  => {
+		setLoading(true)
+		setTodos(null);
+		//querysnapshot
+		const snapshot = await getDocs(todosCol);
+
+		const data = snapshot.docs.map(doc => {
+			return {
+				...doc.data(),
+				_id: doc.id
+			}
+		})
+
+		setTodos(data);
+		setLoading(false);
+	}
+
+	useEffect(()=> {
+		getTodos();
+	}, [])
 
 	// Create a new todo in the API
 	const addTodo = (todo: NewTodo) => {
