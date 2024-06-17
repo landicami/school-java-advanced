@@ -1,22 +1,61 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Button from "react-bootstrap/Button";
 import { Link, useParams } from "react-router-dom";
 import ConfirmationModal from "../components/ConfirmationModal";
 import AutoDismissingAlert from "../components/AutoDismissingAlert";
 import useStatusLocation from "../hooks/useStatusLocation";
 import { Todo } from "../types/Todo.types";
+import { CollectionReference, collection, doc, getDoc, getDocs } from "firebase/firestore";
+import { databas, todosCol } from "../services/firebase";
 
-const todo: Todo = {
-	_id: "Xi6VigUyelerlFbSHKTZ",
-	title: "Learn to fake better data 😅",
-	completed: true,
-};
 
 const TodoPage = () => {
+	const [todo, setTodo]= useState<Todo | null>(null);
+	const [error, setError] = useState(false);
+	const [loading, setLoading] = useState(true);
 	const [showDeleteModal, setShowDeleteModal] = useState(false);
 	const { id } = useParams();
-	const todoId = Number(id);
+	const todoId = id;
 	const location = useStatusLocation();
+
+	const getTodo = async () => {
+		setError(false);
+		setLoading(true);
+		setTodo(null)
+
+		const docRef = doc(todosCol, todoId)
+		const docSnapshot = await getDoc(docRef)
+
+
+		if(!docSnapshot.exists()) {
+			setTodo(null);
+			setError(true);
+			setLoading(false);
+			return;
+		}
+
+		const data = {
+			...docSnapshot.data(),
+			_id: docSnapshot.id
+
+	}
+
+		setTodo(data);
+		setLoading(false)
+	}
+
+	useEffect(()=> {
+		getTodo();
+
+	}, [todoId]);
+
+	if (error) {
+		return <p>Ooops, bad stuff happend. Try again later?</p>
+	}
+
+	if (loading || !todo) {
+		return <p>Loading...</p>
+	}
 
 	return (
 		<>
