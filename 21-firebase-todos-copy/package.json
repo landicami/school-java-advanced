@@ -8,10 +8,14 @@
     "build": "tsc && vite build",
     "check:lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "check:tsc": "tsc",
+    "check:type-coverage": "type-coverage --detail --at-least 100 --ignore-files 'test/*'",
+    "check": "run-s clean && run-p check:*",
+    "clean": "del-cli dist/",
     "preview": "vite preview"
   },
   "dependencies": {
     "bootstrap": "^5.3.3",
+    "firebase": "^10.12.2",
     "react": "^18.3.1",
     "react-bootstrap": "^2.10.2",
     "react-bootstrap-icons": "^1.11.4",
