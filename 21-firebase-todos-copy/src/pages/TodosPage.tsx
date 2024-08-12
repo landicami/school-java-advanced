@@ -5,10 +5,10 @@ import AddNewTodoForm from "../components/AddNewTodoForm";
 import AutoDismissingAlert from "../components/AutoDismissingAlert";
 import TodoCounter from "../components/TodoCounter";
 import useStatusLocation from "../hooks/useStatusLocation";
-import { NewTodo, Todo } from "../types/Todo.types";
-import { databas, todosCol } from "../services/firebase";
-import { useEffect, useState } from "react";
-import { CollectionReference, collection,getDocs } from "firebase/firestore";
+import { NewTodo } from "../types/Todo.types";
+// import { databas, todosCol } from "../services/firebase";
+import { useEffect } from "react";
+// import { CollectionReference, collection,getDocs } from "firebase/firestore";
 import useGetTodos from "../hooks/useGetTodos";
 
 
