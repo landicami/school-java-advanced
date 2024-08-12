@@ -1,61 +1,51 @@
-import { useEffect, useRef, useState } from 'react';
-import { NewTodo } from '../types/Todo.types';
+import { useEffect, useRef, useState } from "react";
+import { NewTodo, TodoFormData } from "../types/Todo.types";
+import Form from "react-bootstrap/Form";
+import Button from "react-bootstrap/Button";
+import InputGroup from "react-bootstrap/InputGroup";
+import { SubmitHandler, useForm } from "react-hook-form";
 
 interface AddNewTodoFormProps {
 	onAddTodo: (todo: NewTodo) => void;
 }
 
 const AddNewTodoForm: React.FC<AddNewTodoFormProps> = ({ onAddTodo }) => {
-	const [inputNewTodoTitle, setInputNewTodoTitle] = useState("");
-	const inputNewTodoTitleRef = useRef<HTMLInputElement>(null);
+	const {
+		handleSubmit,
+		register,
+		formState: { errors },
+	} = useForm<TodoFormData>();
 
-	const handleAddTodo = (e: React.FormEvent) => {
-		e.preventDefault();
-
-		// create a new todo
-		const newTodo = {
-			title: inputNewTodoTitle.trim(),
-			completed: false,
-		}
-
-		// give new todo to App
-		onAddTodo(newTodo);
-
-		// clear input value
-		setInputNewTodoTitle("");
-	}
-
-	// On component mount, focus on the input field
-	useEffect(() => {
-		inputNewTodoTitleRef.current?.focus();
-	}, []);
+	const onFormSubmit: SubmitHandler<TodoFormData> = (data) => {
+		onAddTodo(data);
+	};
 
 	return (
-		<form onSubmit={handleAddTodo} className="mb-3">
-			<div className="input-group">
-				<input
-					aria-label="New todo title"
-					className="form-control"
-					onChange={e => setInputNewTodoTitle(e.target.value)}
-					placeholder="Learn about GTD"
-					ref={inputNewTodoTitleRef}
-					required
+		<Form onSubmit={handleSubmit(onFormSubmit)} className="mb-3">
+			<InputGroup>
+				<Form.Control
 					type="text"
-					value={inputNewTodoTitle}
+					className="form-control"
+					aria-label="The title of the new todo"
+					{...register("title", {
+						required: true,
+						minLength: {
+							value: 5,
+							message: "MOAR CHARACHTERS at least five",
+						},
+					})}
 				/>
 
-				<button
-					className="btn btn-success"
-					disabled={inputNewTodoTitle.trim().length < 3}
-					type="submit"
-				>👶🏻</button>
-			</div>
+				<Button variant="success" type="submit">
+					👶🏻
+				</Button>
+			</InputGroup>
 
-			{inputNewTodoTitle.trim().length > 0 && inputNewTodoTitle.trim().length < 3 && (
-				<div className="form-text text-danger">Please enter 3 chars or more</div>
+			{errors.title && (
+				<div className="form-text text-danger">{errors.title.message ?? "Please enter some chars or more"}</div>
 			)}
-		</form>
-	)
-}
+		</Form>
+	);
+};
 
-export default AddNewTodoForm
+export default AddNewTodoForm;
