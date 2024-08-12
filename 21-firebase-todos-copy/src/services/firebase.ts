@@ -1,6 +1,6 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-import { CollectionReference, collection, getFirestore } from "firebase/firestore";
+import { CollectionReference, DocumentData, collection, getFirestore } from "firebase/firestore";
 import { Todo } from "../types/Todo.types";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -20,8 +20,17 @@ const app = initializeApp(firebaseConfig);
 
 export const databas = getFirestore(app);
 
-export const todosCol = collection(databas, "todos") as CollectionReference<Todo>
-//this is my databas
+//default typ om vi inte skickar in något blir T documentData
+const createCollection = <T = DocumentData>(collectionName: string) => {
+	return collection(databas, collectionName) as CollectionReference<T>;
+
+}
+
+// Our collection references
+export const todosCol = createCollection<Todo>("todos");
+//            ^?
+export const lolcatsCol = createCollection("lolcats");
+//            ^?
 
 export default app;
 
