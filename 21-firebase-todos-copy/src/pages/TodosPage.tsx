@@ -10,31 +10,36 @@ import { NewTodo } from "../types/Todo.types";
 import { useEffect } from "react";
 // import { CollectionReference, collection,getDocs } from "firebase/firestore";
 import useGetTodos from "../hooks/useGetTodos";
-
-
+import { newTodosCol, todosCol } from "../services/firebase";
+import { doc, setDoc } from "firebase/firestore";
+import { toast } from "react-toastify";
 
 function TodosPage() {
 	const location = useStatusLocation();
 
+	const { getData: getTodos, data: todos } = useGetTodos();
 
-	const {getTodos, data: todos, } = useGetTodos();
-
-	useEffect(()=> {
+	useEffect(() => {
 		getTodos();
-	}, [])
+	}, []);
 
 	// Create a new todo in the API
-	const addTodo = (todo: NewTodo) => {
+	const addTodo = async (todo: NewTodo) => {
 		// 👻
 		console.log("Would add a new todo:", todo);
+		const docRef = doc(newTodosCol);
+		await setDoc(docRef, { ...todo, completed: todo.completed ?? false });
+
+		toast.success("That's added");
 	};
 
 	return (
 		<>
-
 			<div className="d-flex justify-content-between align-items-start">
 				<h1 className="mb-3">Todos</h1>
-				<Button variant="primary" onClick={() => getTodos()}>Reload</Button>
+				<Button variant="primary" onClick={() => getTodos()}>
+					Reload
+				</Button>
 			</div>
 
 			{location.state && location.state.status && (
@@ -61,16 +66,11 @@ function TodosPage() {
 						))}
 					</ListGroup>
 
-					<TodoCounter
-						finished={todos.filter((todo) => todo.completed).length}
-						total={todos.length}
-					/>
+					<TodoCounter finished={todos.filter((todo) => todo.completed).length} total={todos.length} />
 				</>
 			)}
 
-			{todos && !todos.length && (
-				<div className="alert alert-success">You ain't got no todos 🤩!</div>
-			)}
+			{todos && !todos.length && <div className="alert alert-success">You ain't got no todos 🤩!</div>}
 		</>
 	);
 }

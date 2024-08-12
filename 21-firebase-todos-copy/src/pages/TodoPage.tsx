@@ -9,7 +9,6 @@ import useStatusLocation from "../hooks/useStatusLocation";
 // import { databas, todosCol } from "../services/firebase";
 import useGetTodo from "../hooks/useGetTodo";
 
-
 const TodoPage = () => {
 	// const [todo, setTodo]= useState<Todo | null>(null);
 	// const [error, setError] = useState(false);
@@ -19,8 +18,7 @@ const TodoPage = () => {
 	const todoId = id;
 	const location = useStatusLocation();
 
-
-	const {getTodo, data: todo, loading, error} = useGetTodo(todoId!);
+	const { getSingleData: getTodo, data: todo, loading, error } = useGetTodo(todoId!);
 
 	// const getTodo = async () => {
 	// 	setError(false);
@@ -29,7 +27,6 @@ const TodoPage = () => {
 
 	// 	const docRef = doc(todosCol, todoId)
 	// 	const docSnapshot = await getDoc(docRef)
-
 
 	// 	if(!docSnapshot.exists()) {
 	// 		setTodo(null);
@@ -48,17 +45,16 @@ const TodoPage = () => {
 	// 	setLoading(false)
 	// }
 
-	useEffect(()=> {
+	useEffect(() => {
 		getTodo();
-
 	}, [todoId]);
 
 	if (error) {
-		return <p>Ooops, bad stuff happend. Try again later?</p>
+		return <p>Ooops, bad stuff happend. Try again later?</p>;
 	}
 
 	if (loading || !todo) {
-		return <p>Loading...</p>
+		return <p>Loading...</p>;
 	}
 
 	return (
