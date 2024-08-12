@@ -1,29 +1,12 @@
-import { useState } from 'react'
-import { Todo } from '../types/Todo.types';
-import { getDocs } from 'firebase/firestore';
-import { todosCol } from '../services/firebase';
+import { todosCol } from "../services/firebase";
+import useGetCollection from "./useGetCollection";
 
 const useGetTodos = () => {
-	const [data, setData] = useState<Todo[] | null>(null);
-	const [loading, setLoading] = useState(true);
+	const { data, loading, getData } = useGetCollection(todosCol);
 
-	const getTodos = async ()  => {
-		setLoading(true)
-		setData(null);
-		//querysnapshot
-		const snapshot = await getDocs(todosCol);
+	return { getData, loading, data };
 
-		const data = snapshot.docs.map(doc => {
-			return {
-				...doc.data(),
-				_id: doc.id
-			}
-		})
+	// eller return useGetCollection(todosCol)
+};
 
-		setData(data);
-		setLoading(false);
-	}
-	return { getTodos, loading, data }
-}
-
-export default useGetTodos
+export default useGetTodos;
