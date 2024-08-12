@@ -14,31 +14,13 @@ import useGetTodos from "../hooks/useGetTodos";
 
 
 function TodosPage() {
-	// const [todos, setTodos] = useState<Todo[] | null>(null);
-	// const [loading, setLoading] = useState(true);
 	const location = useStatusLocation();
 
-	// const getTodos = async ()  => {
-	// 	setLoading(true)
-	// 	setTodos(null);
-	// 	//querysnapshot
-	// 	const snapshot = await getDocs(todosCol);
 
-	// 	const data = snapshot.docs.map(doc => {
-	// 		return {
-	// 			...doc.data(),
-	// 			_id: doc.id
-	// 		}
-	// 	})
-
-	// 	setTodos(data);
-	// 	setLoading(false);
-	// }
-
-	const getTodos = useGetTodos();
+	const {getTodos, data: todos, } = useGetTodos();
 
 	useEffect(()=> {
-		getTodos.getTodos();
+		getTodos();
 	}, [])
 
 	// Create a new todo in the API
@@ -52,7 +34,7 @@ function TodosPage() {
 
 			<div className="d-flex justify-content-between align-items-start">
 				<h1 className="mb-3">Todos</h1>
-				<Button variant="primary" onClick={() => getTodos.getTodos()}>Reload</Button>
+				<Button variant="primary" onClick={() => getTodos()}>Reload</Button>
 			</div>
 
 			{location.state && location.state.status && (
@@ -63,10 +45,10 @@ function TodosPage() {
 
 			<AddNewTodoForm onAddTodo={addTodo} />
 
-			{getTodos.todos && getTodos.todos.length > 0 && (
+			{todos && todos.length > 0 && (
 				<>
 					<ListGroup className="todolist">
-						{getTodos.todos.map((todo) => (
+						{todos.map((todo) => (
 							<ListGroup.Item
 								action
 								as={Link}
@@ -80,13 +62,13 @@ function TodosPage() {
 					</ListGroup>
 
 					<TodoCounter
-						finished={getTodos.todos.filter((todo) => todo.completed).length}
-						total={getTodos.todos.length}
+						finished={todos.filter((todo) => todo.completed).length}
+						total={todos.length}
 					/>
 				</>
 			)}
 
-			{getTodos.todos && !getTodos.todos.length && (
+			{todos && !todos.length && (
 				<div className="alert alert-success">You ain't got no todos 🤩!</div>
 			)}
 		</>

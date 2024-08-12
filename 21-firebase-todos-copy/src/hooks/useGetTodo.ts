@@ -4,21 +4,21 @@ import { todosCol } from '../services/firebase';
 import { doc, getDoc } from 'firebase/firestore';
 
 const useGetTodo = (todoId: string) => {
-	const [todo, setTodo]= useState<Todo | null>(null);
+	const [data, setData]= useState<Todo | null>(null);
 	const [error, setError] = useState(false);
 	const [loading, setLoading] = useState(true);
 
 	const getTodo = async () => {
 		setError(false);
 		setLoading(true);
-		setTodo(null)
+		setData(null)
 
 		const docRef = doc(todosCol, todoId)
 		const docSnapshot = await getDoc(docRef)
 
 
 		if(!docSnapshot.exists()) {
-			setTodo(null);
+			setData(null);
 			setError(true);
 			setLoading(false);
 			return;
@@ -30,10 +30,10 @@ const useGetTodo = (todoId: string) => {
 
 	}
 
-		setTodo(data);
+		setData(data);
 		setLoading(false)
 	}
-  return {getTodo, todoId, todo, error, loading}
+  return {getTodo, todoId, data, error, loading}
 }
 
 export default useGetTodo

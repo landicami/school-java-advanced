@@ -20,7 +20,7 @@ const TodoPage = () => {
 	const location = useStatusLocation();
 
 
-	const getTodo = useGetTodo(todoId!);
+	const {getTodo, data: todo, loading, error} = useGetTodo(todoId!);
 
 	// const getTodo = async () => {
 	// 	setError(false);
@@ -49,21 +49,21 @@ const TodoPage = () => {
 	// }
 
 	useEffect(()=> {
-		getTodo.getTodo();
+		getTodo();
 
 	}, [todoId]);
 
-	if (getTodo.error) {
+	if (error) {
 		return <p>Ooops, bad stuff happend. Try again later?</p>
 	}
 
-	if (getTodo.loading || !getTodo.todo) {
+	if (loading || !todo) {
 		return <p>Loading...</p>
 	}
 
 	return (
 		<>
-			<h1 title={`Todo #${getTodo.todoId}`}>{getTodo.todo.title}</h1>
+			<h1 title={`Todo #${todoId}`}>{todo.title}</h1>
 
 			{location.state && location.state.status && (
 				<AutoDismissingAlert hideAfter={1000} variant={location.state.status.type}>
@@ -73,7 +73,7 @@ const TodoPage = () => {
 
 			<p>
 				<strong>Status:</strong>{" "}
-				{getTodo.todo.completed ? (
+				{todo.completed ? (
 					<span className="completed">Completed</span>
 				) : (
 					<span className="not-completed">Not completed</span>
@@ -101,7 +101,7 @@ const TodoPage = () => {
 				title="Confirm delete"
 				variant="danger"
 			>
-				Delete todo "{getTodo.todo.title}"?
+				Delete todo "{todo.title}"?
 			</ConfirmationModal>
 
 			<Link to="/todos" className="btn btn-secondary" role="button">

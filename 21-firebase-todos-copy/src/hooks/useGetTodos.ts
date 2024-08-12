@@ -4,12 +4,12 @@ import { getDocs } from 'firebase/firestore';
 import { todosCol } from '../services/firebase';
 
 const useGetTodos = () => {
-	const [todos, setTodos] = useState<Todo[] | null>(null);
+	const [data, setData] = useState<Todo[] | null>(null);
 	const [loading, setLoading] = useState(true);
 
 	const getTodos = async ()  => {
 		setLoading(true)
-		setTodos(null);
+		setData(null);
 		//querysnapshot
 		const snapshot = await getDocs(todosCol);
 
@@ -20,10 +20,10 @@ const useGetTodos = () => {
 			}
 		})
 
-		setTodos(data);
+		setData(data);
 		setLoading(false);
 	}
-	return { getTodos, loading, todos }
+	return { getTodos, loading, data }
 }
 
 export default useGetTodos
