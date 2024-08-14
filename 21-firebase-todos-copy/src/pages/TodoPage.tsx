@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import Button from "react-bootstrap/Button";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import ConfirmationModal from "../components/ConfirmationModal";
 import AutoDismissingAlert from "../components/AutoDismissingAlert";
 import useStatusLocation from "../hooks/useStatusLocation";
@@ -8,6 +8,9 @@ import useStatusLocation from "../hooks/useStatusLocation";
 // import { CollectionReference, collection, doc, getDoc, getDocs } from "firebase/firestore";
 // import { databas, todosCol } from "../services/firebase";
 import useGetTodo from "../hooks/useGetTodo";
+import { deleteDoc, doc, updateDoc } from "firebase/firestore";
+import { todosCol } from "../services/firebase";
+import { toast } from "react-toastify";
 
 const TodoPage = () => {
 	// const [todo, setTodo]= useState<Todo | null>(null);
@@ -17,33 +20,28 @@ const TodoPage = () => {
 	const { id } = useParams();
 	const todoId = id;
 	const location = useStatusLocation();
+	const navigate = useNavigate();
 
 	const { getSingleData: getTodo, data: todo, loading, error } = useGetTodo(todoId!);
 
-	// const getTodo = async () => {
-	// 	setError(false);
-	// 	setLoading(true);
-	// 	setTodo(null)
+	const toggleTodo = async (todoId: string) => {
+		const todoRef = doc(todosCol, todoId);
+		await updateDoc(todoRef, {
+			completed: !todo?.completed,
+		});
+		console.log(todoRef);
+		getTodo();
+	};
 
-	// 	const docRef = doc(todosCol, todoId)
-	// 	const docSnapshot = await getDoc(docRef)
+	const deleteTodo = async (todoId: string) => {
+		const todoRef = doc(todosCol, todoId);
+		await deleteDoc(todoRef);
+		toast.success("Yay you deleted, going back in two");
 
-	// 	if(!docSnapshot.exists()) {
-	// 		setTodo(null);
-	// 		setError(true);
-	// 		setLoading(false);
-	// 		return;
-	// 	}
-
-	// 	const data = {
-	// 		...docSnapshot.data(),
-	// 		_id: docSnapshot.id
-
-	// }
-
-	// 	setTodo(data);
-	// 	setLoading(false)
-	// }
+		setTimeout(() => {
+			navigate("/todos");
+		}, 2000);
+	};
 
 	useEffect(() => {
 		getTodo();
@@ -77,7 +75,7 @@ const TodoPage = () => {
 			</p>
 
 			<div className="buttons mb-3">
-				<Button onClick={() => console.log("Would toggle todo")} variant="success">
+				<Button onClick={() => toggleTodo(todoId!)} variant="success">
 					Toggle
 				</Button>
 
@@ -92,7 +90,7 @@ const TodoPage = () => {
 
 			<ConfirmationModal
 				onCancel={() => setShowDeleteModal(false)}
-				onConfirm={() => console.log("Would delete todo with id:", todoId)}
+				onConfirm={() => deleteTodo(todoId!)}
 				show={showDeleteModal}
 				title="Confirm delete"
 				variant="danger"
