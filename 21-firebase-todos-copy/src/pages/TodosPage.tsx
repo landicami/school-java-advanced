@@ -11,7 +11,7 @@ import { useEffect } from "react";
 // import { CollectionReference, collection,getDocs } from "firebase/firestore";
 import useGetTodos from "../hooks/useGetTodos";
 import { newTodosCol, todosCol } from "../services/firebase";
-import { doc, setDoc } from "firebase/firestore";
+import { Timestamp, doc, serverTimestamp, setDoc } from "firebase/firestore";
 import { toast } from "react-toastify";
 
 function TodosPage() {
@@ -28,9 +28,21 @@ function TodosPage() {
 		// 👻
 		console.log("Would add a new todo:", todo);
 		const docRef = doc(newTodosCol);
-		await setDoc(docRef, { ...todo, completed: todo.completed ?? false });
+		await setDoc(docRef, { ...todo, completed: todo.completed ?? false, timestamp: serverTimestamp() });
 
 		toast.success("That's added");
+	};
+
+	const formatTimestamp = (timestamp?: Timestamp): string => {
+		if (!timestamp) {
+			return "No timestamp available";
+		}
+
+		// Konvertera Timestamp till Date
+		const date = new Date(timestamp.seconds * 1000 + timestamp.nanoseconds / 1000000);
+
+		// Formatera till en läsbar sträng
+		return date.toLocaleString();
 	};
 
 	return (
@@ -62,6 +74,7 @@ function TodosPage() {
 								to={`/todos/${todo._id}`}
 							>
 								<span className="todo-title">{todo.title}</span>
+								<span>{formatTimestamp(todo.timestamp)}</span>
 							</ListGroup.Item>
 						))}
 					</ListGroup>
