@@ -24,21 +24,39 @@ const EditTodoPage = () => {
 
 	const onFormSubmit: SubmitHandler<TodoFormData> = async (data) => {
 		const todoRef = doc(todosCol, todoId);
-		await updateDoc(todoRef, {
-			title: data.title,
-		});
-		console.log(todoRef);
-		getTodo();
-		toast.success("Yay you updated, going back in two");
 
-		setTimeout(() => {
-			navigate("/todos");
-		}, 2000);
+		// Update the document in Firestore
+		toast.promise(updateDoc(todoRef, data), {
+			pending: "🤔 Saving todo...",
+			success: "🤩 Todo saved 🛟",
+			error: "😬 Unable to save todo",
+		});
+
+		/*
+		toast.promise(async () => {
+			await updateDoc(docRef, data);
+			await getTodo(id);
+			await new Promise(r => setTimeout(r, 1500));
+		}, {
+			pending: "🤔 Saving todo...",
+			success: "🤩 Todo saved 🛟",
+			error: "😬 Unable to save todo",
+		});
+		*/
+
+		// setTimeout(() => {
+		// 	navigate("/todos");
+		// }, 2000);
+		await getTodo();
 	};
 
 	useEffect(() => {
 		getTodo();
 	}, [todoId]);
+
+	if (loading || !todo) {
+		return <p>Loading...</p>;
+	}
 
 	return (
 		<>
@@ -49,7 +67,7 @@ const EditTodoPage = () => {
 					type="text"
 					className="form-control"
 					aria-label="The title of the new todo"
-					placeholder={todo ? todo.title : "Write here"}
+					defaultValue={todo.title}
 					{...register("title", {
 						required: true,
 						minLength: {
