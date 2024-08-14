@@ -19,7 +19,8 @@ const EditTodoPage = () => {
 	const {
 		handleSubmit,
 		register,
-		formState: { errors },
+		reset,
+		formState: { errors, isSubmitSuccessful },
 	} = useForm<TodoFormData>();
 
 	const onFormSubmit: SubmitHandler<TodoFormData> = async (data) => {
@@ -49,6 +50,11 @@ const EditTodoPage = () => {
 		// }, 2000);
 		await getTodo();
 	};
+
+	// Reset form when successfully created a todo
+	if (isSubmitSuccessful) {
+		reset();
+	}
 
 	useEffect(() => {
 		getTodo();

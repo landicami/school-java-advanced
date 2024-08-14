@@ -13,13 +13,17 @@ const AddNewTodoForm: React.FC<AddNewTodoFormProps> = ({ onAddTodo }) => {
 	const {
 		handleSubmit,
 		register,
-		formState: { errors },
+		reset,
+		formState: { errors, isSubmitSuccessful },
 	} = useForm<TodoFormData>();
 
 	const onFormSubmit: SubmitHandler<TodoFormData> = (data) => {
 		onAddTodo(data);
 	};
-
+	// Reset form when successfully created a todo
+	if (isSubmitSuccessful) {
+		reset();
+	}
 	return (
 		<Form onSubmit={handleSubmit(onFormSubmit)} className="mb-3">
 			<InputGroup>

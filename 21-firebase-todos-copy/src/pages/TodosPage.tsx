@@ -74,7 +74,7 @@ function TodosPage() {
 								to={`/todos/${todo._id}`}
 							>
 								<span className="todo-title">{todo.title}</span>
-								<span>{formatTimestamp(todo.timestamp)}</span>
+								<span className="timestamp">{formatTimestamp(todo.timestamp)}</span>
 							</ListGroup.Item>
 						))}
 					</ListGroup>
