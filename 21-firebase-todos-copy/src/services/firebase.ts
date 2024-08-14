@@ -29,8 +29,6 @@ const createCollection = <T = DocumentData>(collectionName: string) => {
 export const todosCol = createCollection<Todo>("todos");
 export const newTodosCol = createCollection<NewTodo>("todos");
 
-//            ^?
 export const lolcatsCol = createCollection("lolcats");
-//            ^?
 
 export default app;
