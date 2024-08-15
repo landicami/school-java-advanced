@@ -13,6 +13,12 @@ h6 {
 	margin-bottom: 0.75em;
 }
 
+.cta {
+	background-color: $primary;
+	border-radius: 5px;
+	color: white;
+}
+
 #App {
 	display: flex;
 	flex-direction: column;

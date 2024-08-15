@@ -17,8 +17,11 @@ const Navigation = () => {
 						<Nav.Link as={NavLink} end to="/todos">
 							Todos
 						</Nav.Link>
-						<Nav.Link as={NavLink} end to="/signup">
-							Signup
+						<Nav.Link as={NavLink} className="cta" end to="/signup">
+							Sign up
+						</Nav.Link>
+						<Nav.Link as={NavLink} end to="/login">
+							Login
 						</Nav.Link>
 					</Nav>
 				</Navbar.Collapse>

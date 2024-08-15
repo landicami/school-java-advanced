@@ -7,13 +7,19 @@ import Row from "react-bootstrap/Row";
 import { Link } from "react-router-dom";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { SignUpCredentials } from "../../types/User.types";
+import { useRef } from "react";
 
 const SignupPage = () => {
 	const {
 		handleSubmit,
 		register,
+		watch,
 		formState: { errors },
 	} = useForm<SignUpCredentials>();
+
+	//kommer innehålla värdet som står i passwordfältet
+	const passWordRef = useRef("");
+	passWordRef.current = watch("password");
 
 	const onSignup: SubmitHandler<SignUpCredentials> = async (data) => {
 		console.log("Would signup user:", data);
@@ -72,6 +78,9 @@ const SignupPage = () => {
 											minLength: {
 												message: "Enter at least a few characters",
 												value: 3,
+											},
+											validate: (value) => {
+												return value === passWordRef.current || "No match in psw";
 											},
 										})}
 									/>
