@@ -1,5 +1,6 @@
 import { useState } from "react";
 import Button from "react-bootstrap/Button";
+import Container from "react-bootstrap/Container";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import ConfirmationModal from "../components/ConfirmationModal";
 import AutoDismissingAlert from "../components/AutoDismissingAlert";
@@ -13,11 +14,7 @@ const TodoPage = () => {
 	const [showDeleteModal, setShowDeleteModal] = useState(false);
 	const navigate = useNavigate();
 	const { id } = useParams();
-	const {
-		data: todo,
-		error,
-		loading,
-	} = useGetTodo(id as string);
+	const { data: todo, error, loading } = useGetTodo(id as string);
 	const location = useStatusLocation();
 
 	const handleDelete = async () => {
@@ -35,18 +32,18 @@ const TodoPage = () => {
 		navigate("/todos", {
 			replace: true,
 		});
-	}
+	};
 
 	if (error) {
-		return <p>Ooops, bad stuff happend. Try again later?</p>
+		return <p>Ooops, bad stuff happend. Try again later?</p>;
 	}
 
 	if (loading || !todo) {
-		return <p>Loading...</p>
+		return <p>Loading...</p>;
 	}
 
 	return (
-		<>
+		<Container className="py-3">
 			<h1 title={`Todo #${todo._id}`}>{todo.title}</h1>
 
 			{location.state && location.state.status && (
@@ -91,7 +88,7 @@ const TodoPage = () => {
 			<Link to="/todos" className="btn btn-secondary" role="button">
 				&laquo; All todos
 			</Link>
-		</>
+		</Container>
 	);
 };
 

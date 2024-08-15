@@ -1,4 +1,3 @@
-import Container from "react-bootstrap/Container";
 import { Routes, Route } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import Navigation from "./pages/partials/Navigation";
@@ -14,29 +13,27 @@ function App() {
 		<div id="App">
 			<Navigation />
 
-			<Container className="py-3">
-				<Routes>
-					<Route path="/" element={<HomePage />} />
-					<Route path="/todos" element={<TodosPage />} />
-					<Route path="/todos/:id" element={<TodoPage />} />
-					<Route path="/todos/:id/edit" element={<EditTodoPage />} />
+			<Routes>
+				<Route path="/" element={<HomePage />} />
+				<Route path="/todos" element={<TodosPage />} />
+				<Route path="/todos/:id" element={<TodoPage />} />
+				<Route path="/todos/:id/edit" element={<EditTodoPage />} />
 
-					<Route path="*" element={<NotFoundPage />} />
-				</Routes>
-			</Container>
+				<Route path="*" element={<NotFoundPage />} />
+			</Routes>
 
 			<ToastContainer
 				// position="bottom-right"
 				// autoClose={3000}  // close automatically after 3 seconds instead of the default 5 seconds
 				// autoClose={false}  // don't close automatically
 				// pauseOnFocusLoss={false}  // continue autoclose even if window isn't in focus
-				closeOnClick  // close on click (duh)
+				closeOnClick // close on click (duh)
 				theme="colored"
 				limit={5}
 				stacked
 			/>
 		</div>
-	)
+	);
 }
 
 export default App;

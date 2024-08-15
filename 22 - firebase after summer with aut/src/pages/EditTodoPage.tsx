@@ -6,6 +6,7 @@ import TodoForm from "../components/TodoForm";
 import useGetTodo from "../hooks/useGetTodo";
 import { todosCol } from "../services/firebase";
 import { TodoFormData } from "../types/Todo.types";
+import Container from "react-bootstrap/Container";
 
 const EditTodoPage = () => {
 	const { id } = useParams();
@@ -48,7 +49,7 @@ const EditTodoPage = () => {
 	}
 
 	return (
-		<>
+		<Container className="py-3">
 			<h1 title={`Todo #${id}`}>Edit: {todo.title}</h1>
 
 			<TodoForm initialValues={todo} onSave={updateTodo} />
@@ -56,7 +57,7 @@ const EditTodoPage = () => {
 			<Button variant="secondary" onClick={() => navigate(-1)}>
 				&laquo; Go back
 			</Button>
-		</>
+		</Container>
 	);
 };
 

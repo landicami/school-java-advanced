@@ -1,4 +1,5 @@
 import { doc, serverTimestamp, setDoc } from "firebase/firestore";
+import Container from "react-bootstrap/Container";
 import Button from "react-bootstrap/Button";
 import ListGroup from "react-bootstrap/ListGroup";
 import { Link } from "react-router-dom";
@@ -36,7 +37,7 @@ function TodosPage() {
 	};
 
 	return (
-		<>
+		<Container className="py-3">
 			<div className="d-flex justify-content-between align-items-start">
 				<h1 className="mb-3">Todos</h1>
 			</div>
@@ -77,7 +78,7 @@ function TodosPage() {
 			)}
 
 			{todos && !todos.length && <div className="alert alert-success">You ain't got no todos 🤩!</div>}
-		</>
+		</Container>
 	);
 }
 

@@ -1,20 +1,19 @@
 import Button from "react-bootstrap/Button";
 import ButtonGroup from "react-bootstrap/ButtonGroup";
+import Container from "react-bootstrap/Container";
 import { CardChecklist } from "react-bootstrap-icons";
 import { toast } from "react-toastify";
 
 const HomePage = () => {
 	return (
-		<>
+		<Container className="py-3 center-y">
 			<h1>Firebase Todos</h1>
 
 			<p>Because when your life is on fire 🔥, you need a todo list.</p>
 
 			<ButtonGroup>
 				<Button
-					onClick={() =>
-						toast("Wow 🤩! Such click 🐭, much toast 🍞, very celebrate 🥂!")
-					}
+					onClick={() => toast("Wow 🤩! Such click 🐭, much toast 🍞, very celebrate 🥂!")}
 					variant="primary"
 				>
 					Celebrate 🎉
@@ -42,10 +41,7 @@ const HomePage = () => {
 					Call da police 👮🏻
 				</Button>
 
-				<Button
-					onClick={() => toast.error("Wow, such ERROR, very DANGEROUS!")}
-					variant="danger"
-				>
+				<Button onClick={() => toast.error("Wow, such ERROR, very DANGEROUS!")} variant="danger">
 					Blow shit up 💣
 				</Button>
 
@@ -53,7 +49,7 @@ const HomePage = () => {
 					Booooring 🥱
 				</Button>
 			</ButtonGroup>
-		</>
+		</Container>
 	);
 };
 
