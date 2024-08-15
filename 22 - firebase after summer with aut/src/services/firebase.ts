@@ -1,6 +1,7 @@
 import { initializeApp } from "firebase/app";
 import { CollectionReference, DocumentData, collection, getFirestore } from "firebase/firestore";
 import { NewTodo, Todo } from "../types/Todo.types";
+import { getAuth } from "firebase/auth";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -15,13 +16,16 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 
+//get auth
+export const auth = getAuth();
+
 // Get Firestore Instance
 export const db = getFirestore(app);
 
 // Helper to add type to collection references
 const createCollection = <T = DocumentData>(collectionName: string) => {
 	return collection(db, collectionName) as CollectionReference<T>;
-}
+};
 
 // Our collection references
 export const todosCol = createCollection<Todo>("todos");
