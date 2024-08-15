@@ -7,6 +7,7 @@ import NotFoundPage from "./pages/NotFoundPage";
 import TodosPage from "./pages/TodosPage";
 import TodoPage from "./pages/TodoPage";
 import "./assets/scss/App.scss";
+import SignupPage from "./pages/auth/SignupPage";
 
 function App() {
 	return (
@@ -18,6 +19,7 @@ function App() {
 				<Route path="/todos" element={<TodosPage />} />
 				<Route path="/todos/:id" element={<TodoPage />} />
 				<Route path="/todos/:id/edit" element={<EditTodoPage />} />
+				<Route path="/signup" element={<SignupPage />} />
 
 				<Route path="*" element={<NotFoundPage />} />
 			</Routes>
