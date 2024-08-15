@@ -12,11 +12,7 @@ const EditTodoPage = () => {
 	const navigate = useNavigate();
 
 	// Get todo
-	const {
-		data: todo,
-		getData: getTodo,
-		loading,
-	} = useGetTodo(id);
+	const { data: todo, loading } = useGetTodo(id);
 
 	// Updates the todo in Firestore
 	const updateTodo = async (data: TodoFormData) => {
@@ -45,11 +41,10 @@ const EditTodoPage = () => {
 		*/
 
 		// Get the updated todo
-		await getTodo(id);
-	}
+	};
 
 	if (loading || !todo) {
-		return <p>Loading...</p>
+		return <p>Loading...</p>;
 	}
 
 	return (

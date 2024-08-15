@@ -13,11 +13,7 @@ import { newTodosCol } from "../services/firebase";
 import { TodoFormData } from "../types/Todo.types";
 
 function TodosPage() {
-	const {
-		data: todos,
-		getData: getTodos,
-		loading,
-	} = useGetTodos();
+	const { data: todos, loading } = useGetTodos();
 	const location = useStatusLocation();
 
 	// Create a new todo document in the "todos" collection
@@ -34,7 +30,6 @@ function TodosPage() {
 		});
 
 		// Update list of todos
-		await getTodos();
 
 		// 🥂
 		toast.success("Yay, even MORE stuff to do... 😬");
@@ -44,7 +39,6 @@ function TodosPage() {
 		<>
 			<div className="d-flex justify-content-between align-items-start">
 				<h1 className="mb-3">Todos</h1>
-				<Button variant="primary" onClick={() => getTodos()}>Reload</Button>
 			</div>
 
 			{location.state && location.state.status && (
@@ -71,21 +65,18 @@ function TodosPage() {
 								to={`/todos/${todo._id}`}
 							>
 								<span className="todo-title">{todo.title}</span>
-								<span className="todo-created">{firebaseTimestampToString(todo.created_at)}</span>
+								<span className="todo-created">
+									{todo.created_at ? firebaseTimestampToString(todo.created_at) : "Saving..."}
+								</span>
 							</ListGroup.Item>
 						))}
 					</ListGroup>
 
-					<TodoCounter
-						finished={todos.filter((todo) => todo.completed).length}
-						total={todos.length}
-					/>
+					<TodoCounter finished={todos.filter((todo) => todo.completed).length} total={todos.length} />
 				</>
 			)}
 
-			{todos && !todos.length && (
-				<div className="alert alert-success">You ain't got no todos 🤩!</div>
-			)}
+			{todos && !todos.length && <div className="alert alert-success">You ain't got no todos 🤩!</div>}
 		</>
 	);
 }
