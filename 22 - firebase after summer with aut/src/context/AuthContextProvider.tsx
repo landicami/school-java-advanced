@@ -17,6 +17,7 @@ interface AuthContextType {
 	forgotPswdUser: (email: string) => Promise<void>;
 	isLoading: boolean;
 	currentUser: User | null;
+	userEmail: string | null;
 }
 
 export const AuthContext = createContext<AuthContextType | null>(null);
@@ -24,6 +25,8 @@ export const AuthContext = createContext<AuthContextType | null>(null);
 const AuthContextProvider: React.FC<PropsWithChildren> = ({ children }) => {
 	const [currentUser, setCurrentUser] = useState<User | null>(null);
 	const [isLoading, setisLoading] = useState(true);
+	const [userEmail, setUserEmail] = useState<string | null>(null);
+
 	console.log("Loading state is", isLoading);
 
 	const signUp = (email: string, password: string) => {
@@ -64,15 +67,23 @@ const AuthContextProvider: React.FC<PropsWithChildren> = ({ children }) => {
 
 	useEffect(() => {
 		const unsubscribe = onAuthStateChanged(auth, (user) => {
-			setCurrentUser(user ? { ...user } : null); // maybe fix firebase not returning a new user when updating a user's information
+			setCurrentUser(user); // maybe fix firebase not returning a new user when updating a user's information
 			setisLoading(false);
+
+			if (user) {
+				// User is logged in
+				setUserEmail(user.email);
+			} else {
+				// No user is logged in
+				setUserEmail(null);
+			}
 		});
 
 		return unsubscribe;
 	}, []);
 
 	return (
-		<AuthContext.Provider value={{ signUp, login, currentUser, isLoading, signOutUser, forgotPswdUser }}>
+		<AuthContext.Provider value={{ signUp, login, currentUser, isLoading, userEmail, signOutUser, forgotPswdUser }}>
 			{children}
 		</AuthContext.Provider>
 	);
