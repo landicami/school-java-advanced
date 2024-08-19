@@ -1,9 +1,19 @@
 import Container from "react-bootstrap/Container";
+import Button from "react-bootstrap/Button";
 import Navbar from "react-bootstrap/Navbar";
 import Nav from "react-bootstrap/Nav";
 import { Link, NavLink } from "react-router-dom";
+import useAuth from "../../hooks/useAuth";
+import { toast } from "react-toastify";
 
 const Navigation = () => {
+	const { signOutUser } = useAuth();
+
+	const handleSignout = () => {
+		signOutUser();
+		toast.info("User has signed out");
+	};
+
 	return (
 		<Navbar bg="dark" variant="dark" expand="sm">
 			<Container>
@@ -24,6 +34,7 @@ const Navigation = () => {
 							Login
 						</Nav.Link>
 					</Nav>
+					<Button onClick={handleSignout}>Sign out</Button>
 				</Navbar.Collapse>
 			</Container>
 		</Navbar>

@@ -12,10 +12,12 @@ import useGetTodos from "../hooks/useGetTodos";
 import useStatusLocation from "../hooks/useStatusLocation";
 import { newTodosCol } from "../services/firebase";
 import { TodoFormData } from "../types/Todo.types";
+import useAuth from "../hooks/useAuth";
 
 function TodosPage() {
 	const { data: todos, loading } = useGetTodos();
 	const location = useStatusLocation();
+	const { currentUser } = useAuth();
 
 	// Create a new todo document in the "todos" collection
 	const addTodo = async (todo: TodoFormData) => {
@@ -35,6 +37,10 @@ function TodosPage() {
 		// 🥂
 		toast.success("Yay, even MORE stuff to do... 😬");
 	};
+
+	if (!currentUser) {
+		return <p>Please log in...</p>;
+	}
 
 	return (
 		<Container className="py-3">

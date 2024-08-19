@@ -4,12 +4,18 @@ import Container from "react-bootstrap/Container";
 import Card from "react-bootstrap/Card";
 import Form from "react-bootstrap/Form";
 import Row from "react-bootstrap/Row";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { SignUpCredentials } from "../../types/User.types";
-import { useRef } from "react";
+import { useRef, useState } from "react";
+import useAuth from "../../hooks/useAuth";
+import { toast } from "react-toastify";
+import { FirebaseError } from "firebase/app";
 
 const SignupPage = () => {
+	const navigate = useNavigate();
+	const [isSubmitting, setIsSubmitting] = useState(false);
+
 	const {
 		handleSubmit,
 		register,
@@ -21,8 +27,26 @@ const SignupPage = () => {
 	const passWordRef = useRef("");
 	passWordRef.current = watch("password");
 
+	const { signUp } = useAuth();
+
 	const onSignup: SubmitHandler<SignUpCredentials> = async (data) => {
-		console.log("Would signup user:", data);
+		setIsSubmitting(true);
+		try {
+			const userCredential = await signUp(data.email, data.password);
+			if (userCredential) {
+				toast.success("YAY it worked by signing up");
+				navigate("/");
+			}
+		} catch (err) {
+			if (err instanceof FirebaseError) {
+				toast.error(err.message);
+			} else if (err instanceof Error) {
+				toast.error(err.message);
+			} else {
+				toast.error("NAJ");
+			}
+		}
+		setIsSubmitting(false);
 	};
 
 	return (
@@ -89,8 +113,8 @@ const SignupPage = () => {
 									)}
 								</Form.Group>
 
-								<Button disabled={false} type="submit" variant="primary">
-									{false ? "Creating account..." : "Create Account"}
+								<Button disabled={isSubmitting} type="submit" variant="primary">
+									{isSubmitting ? "Creating account..." : "Create Account"}
 								</Button>
 							</Form>
 

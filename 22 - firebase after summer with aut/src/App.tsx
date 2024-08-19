@@ -9,6 +9,7 @@ import TodoPage from "./pages/TodoPage";
 import "./assets/scss/App.scss";
 import SignupPage from "./pages/auth/SignupPage";
 import LoginPage from "./pages/auth/LoginPage";
+import ForgotPsw from "./pages/ForgotPsw";
 
 function App() {
 	return (
@@ -22,6 +23,7 @@ function App() {
 				<Route path="/todos/:id/edit" element={<EditTodoPage />} />
 				<Route path="/signup" element={<SignupPage />} />
 				<Route path="/login" element={<LoginPage />} />
+				<Route path="/forgot-password" element={<ForgotPsw />} />
 
 				<Route path="*" element={<NotFoundPage />} />
 			</Routes>

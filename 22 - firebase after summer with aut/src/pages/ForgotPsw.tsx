@@ -1,4 +1,5 @@
 import { useState } from "react";
+import useAuth from "../hooks/useAuth";
 import Button from "react-bootstrap/Button";
 import Card from "react-bootstrap/Card";
 import Col from "react-bootstrap/Col";
@@ -6,32 +7,30 @@ import Container from "react-bootstrap/Container";
 import Form from "react-bootstrap/Form";
 import Row from "react-bootstrap/Row";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
-import { LoginCredentials } from "../../types/User.types";
-import useAuth from "../../hooks/useAuth";
-import { FirebaseError } from "firebase/app";
 
-const LoginPage = () => {
+import { FirebaseError } from "firebase/app";
+import { resetPsw } from "../types/User.types";
+
+const ForgotPsw = () => {
+	const { forgotPswdUser } = useAuth();
 	const [isSubmitting, setIsSubmitting] = useState(false);
 	const {
 		handleSubmit,
 		register,
-		formState: { errors },
-	} = useForm<LoginCredentials>();
-	const { login } = useAuth();
-	const navigate = useNavigate();
+		reset,
+		formState: { errors, isSubmitSuccessful },
+	} = useForm<resetPsw>();
 
-	const onLogin: SubmitHandler<LoginCredentials> = async (data) => {
+	const onReset: SubmitHandler<resetPsw> = async (data) => {
 		setIsSubmitting(true);
 
-		// Pass email and password along to login in AuthContext
+		// Pass email
 		try {
-			await login(data.email, data.password);
+			await forgotPswdUser(data.email);
 
 			// Celebrate
-			toast.success("🥂 Great success, you remembered your password! Good on you!");
-			navigate("/");
 		} catch (err) {
 			if (err instanceof FirebaseError) {
 				toast.error(err.message);
@@ -44,6 +43,9 @@ const LoginPage = () => {
 
 		setIsSubmitting(false);
 	};
+	if (isSubmitSuccessful) {
+		reset();
+	}
 
 	return (
 		<Container className="py-3 center-y">
@@ -51,9 +53,9 @@ const LoginPage = () => {
 				<Col md={{ span: 6, offset: 3 }}>
 					<Card className="mb-3">
 						<Card.Body>
-							<Card.Title className="mb-3">Log In</Card.Title>
+							<Card.Title className="mb-3">Reset</Card.Title>
 
-							<Form onSubmit={handleSubmit(onLogin)} className="mb-3">
+							<Form onSubmit={handleSubmit(onReset)} className="mb-3">
 								<Form.Group controlId="email" className="mb-3">
 									<Form.Label>Email</Form.Label>
 									<Form.Control
@@ -68,32 +70,14 @@ const LoginPage = () => {
 									)}
 								</Form.Group>
 
-								<Form.Group controlId="password" className="mb-3">
-									<Form.Label>Password</Form.Label>
-									<Form.Control
-										type="password"
-										autoComplete="new-password"
-										{...register("password", {
-											required: "You're kidding, right? Enter a password, stupid",
-											minLength: {
-												message: "Enter at least a few characters",
-												value: 3,
-											},
-										})}
-									/>
-									{errors.password && (
-										<p className="invalid">{errors.password.message || "Invalid value"}</p>
-									)}
-								</Form.Group>
-
 								<Button disabled={isSubmitting} type="submit" variant="primary">
-									{isSubmitting ? "Logging in..." : "Log In"}
+									{isSubmitting ? "Resetting" : "Reset"}
 								</Button>
 							</Form>
-
-							<div className="text-center">
-								<Link to="/forgot-password">Forgot Password?</Link>
-							</div>
+							<p>
+								Om denna e-postadress är registrerad kommer du att få ett mejl för att återställa ditt
+								lösenord.
+							</p>
 						</Card.Body>
 					</Card>
 
@@ -106,4 +90,4 @@ const LoginPage = () => {
 	);
 };
 
-export default LoginPage;
+export default ForgotPsw;
