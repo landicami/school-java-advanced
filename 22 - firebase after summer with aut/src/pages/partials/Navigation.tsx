@@ -31,10 +31,10 @@ const Navigation = () => {
 							Sign up
 						</Nav.Link>
 						<Nav.Link as={NavLink} end to="/login">
-							Login
+							Log in
 						</Nav.Link>
 					</Nav>
-					<Button onClick={handleSignout}>Sign out</Button>
+					<Button onClick={handleSignout}>Log out</Button>
 				</Navbar.Collapse>
 			</Container>
 		</Navbar>

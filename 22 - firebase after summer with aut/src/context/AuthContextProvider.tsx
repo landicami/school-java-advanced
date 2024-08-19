@@ -13,10 +13,10 @@ import { auth } from "../services/firebase";
 interface AuthContextType {
 	signUp: (email: string, password: string) => Promise<UserCredential>;
 	login: (email: string, password: string) => Promise<UserCredential>;
-	currentUser: User | null;
 	signOutUser: () => Promise<void>;
-	isLoading: boolean;
 	forgotPswdUser: (email: string) => Promise<void>;
+	isLoading: boolean;
+	currentUser: User | null;
 }
 
 export const AuthContext = createContext<AuthContextType | null>(null);
@@ -57,12 +57,14 @@ const AuthContextProvider: React.FC<PropsWithChildren> = ({ children }) => {
 	};
 
 	const forgotPswdUser = (email: string) => {
-		return sendPasswordResetEmail(auth, email);
+		return sendPasswordResetEmail(auth, email, {
+			url: window.location.origin + "/login",
+		});
 	};
 
 	useEffect(() => {
 		const unsubscribe = onAuthStateChanged(auth, (user) => {
-			setCurrentUser(user);
+			setCurrentUser(user ? { ...user } : null); // maybe fix firebase not returning a new user when updating a user's information
 			setisLoading(false);
 		});
 

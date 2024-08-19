@@ -17,7 +17,7 @@ import useAuth from "../hooks/useAuth";
 function TodosPage() {
 	const { data: todos, loading } = useGetTodos();
 	const location = useStatusLocation();
-	const { currentUser } = useAuth();
+	const { currentUser, isLoading } = useAuth();
 
 	// Create a new todo document in the "todos" collection
 	const addTodo = async (todo: TodoFormData) => {
@@ -37,6 +37,10 @@ function TodosPage() {
 		// 🥂
 		toast.success("Yay, even MORE stuff to do... 😬");
 	};
+
+	if (isLoading) {
+		return <p>Loading...</p>;
+	}
 
 	if (!currentUser) {
 		return <p>Please log in...</p>;

@@ -16,7 +16,7 @@ const HomePage = () => {
 
 	return (
 		<Container className="py-3 center-y">
-			<div>{currentUser ? <p>Welcome, {currentUser.email}</p> : <p>Please log in.</p>}</div>{" "}
+			<Container>{currentUser ? <p>Welcome, {currentUser.email}</p> : <p>Please log in.</p>}</Container>
 			{currentUser && (
 				<>
 					<h1>Firebase Todos</h1>
