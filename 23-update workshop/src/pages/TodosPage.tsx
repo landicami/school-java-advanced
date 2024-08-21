@@ -11,13 +11,13 @@ import useGetTodos from "../hooks/useGetTodos";
 import useStatusLocation from "../hooks/useStatusLocation";
 import { newTodosCol } from "../services/firebase";
 import { TodoFormData } from "../types/Todo.types";
+import useAuth from "../hooks/useAuth";
 
 function TodosPage() {
-	const {
-		data: todos,
-		loading,
-	} = useGetTodos();
+	const { data: todos, loading } = useGetTodos();
 	const location = useStatusLocation();
+
+	const { currentUser } = useAuth();
 
 	// Create a new todo document in the "todos" collection
 	const addTodo = async (todo: TodoFormData) => {
@@ -25,13 +25,14 @@ function TodosPage() {
 		const docRef = doc(newTodosCol);
 
 		// Set the contents of the document
-		await setDoc(docRef, {
+		const todoUser = await setDoc(docRef, {
 			...todo,
 			completed: todo.completed ?? false,
 			created_at: serverTimestamp(),
 			updated_at: serverTimestamp(),
+			uid: currentUser?.uid,
 		});
-
+		console.log(todoUser);
 		// 🥂
 		toast.success("Yay, even MORE stuff to do... 😬");
 	};
@@ -67,25 +68,18 @@ function TodosPage() {
 							>
 								<span className="todo-title">{todo.title}</span>
 								<span className="todo-created">
-									{todo.created_at
-										? firebaseTimestampToString(todo.created_at)
-										: "Saving..."
-									}
+									{todo.created_at ? firebaseTimestampToString(todo.created_at) : "Saving..."}
 								</span>
+								<span>With uid: {todo.uid}</span>
 							</ListGroup.Item>
 						))}
 					</ListGroup>
 
-					<TodoCounter
-						finished={todos.filter((todo) => todo.completed).length}
-						total={todos.length}
-					/>
+					<TodoCounter finished={todos.filter((todo) => todo.completed).length} total={todos.length} />
 				</>
 			)}
 
-			{todos && !todos.length && (
-				<div className="alert alert-success">You ain't got no todos 🤩!</div>
-			)}
+			{todos && !todos.length && <div className="alert alert-success">You ain't got no todos 🤩!</div>}
 		</Container>
 	);
 }

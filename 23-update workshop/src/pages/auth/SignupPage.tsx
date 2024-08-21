@@ -14,7 +14,12 @@ import { toast } from "react-toastify";
 
 const SignupPage = () => {
 	const [isSubmitting, setIsSubmitting] = useState(false);
-	const { handleSubmit, register, watch, formState: { errors } } = useForm<SignupCredentials>();
+	const {
+		handleSubmit,
+		register,
+		watch,
+		formState: { errors },
+	} = useForm<SignupCredentials>();
 	const { signup } = useAuth();
 	const navigate = useNavigate();
 
@@ -23,6 +28,7 @@ const SignupPage = () => {
 	passwordRef.current = watch("password");
 
 	const onSignup: SubmitHandler<SignupCredentials> = async (data) => {
+		console.log(data);
 		setIsSubmitting(true);
 
 		// Pass email and password along to signup in AuthContext
@@ -32,7 +38,6 @@ const SignupPage = () => {
 			// If successful, toast the user and redirect to the home page
 			toast.success("Yayyy, you gots account!");
 			navigate("/");
-
 		} catch (err) {
 			if (err instanceof FirebaseError) {
 				toast.error(err.message);
@@ -44,7 +49,7 @@ const SignupPage = () => {
 		}
 
 		setIsSubmitting(false);
-	}
+	};
 
 	return (
 		<Container className="py-3 center-y">
@@ -64,7 +69,9 @@ const SignupPage = () => {
 											required: "You have to enter an email 🤦🏼‍♂️",
 										})}
 									/>
-									{errors.email && <p className="invalid">{errors.email.message || "Invalid value"}</p>}
+									{errors.email && (
+										<p className="invalid">{errors.email.message || "Invalid value"}</p>
+									)}
 								</Form.Group>
 
 								<Form.Group controlId="password" className="mb-3">
@@ -77,10 +84,12 @@ const SignupPage = () => {
 											minLength: {
 												message: "Enter at least a few characters",
 												value: 3,
-											}
+											},
 										})}
 									/>
-									{errors.password && <p className="invalid">{errors.password.message || "Invalid value"}</p>}
+									{errors.password && (
+										<p className="invalid">{errors.password.message || "Invalid value"}</p>
+									)}
 									<Form.Text>At least 6 characters</Form.Text>
 								</Form.Group>
 
@@ -97,20 +106,16 @@ const SignupPage = () => {
 											},
 											validate: (value) => {
 												return value === passwordRef.current || "The passwords do not match 🤦🏼‍♂️";
-											}
+											},
 										})}
 									/>
-									{errors.confirmPassword && <p className="invalid">{errors.confirmPassword.message || "Invalid value"}</p>}
+									{errors.confirmPassword && (
+										<p className="invalid">{errors.confirmPassword.message || "Invalid value"}</p>
+									)}
 								</Form.Group>
 
-								<Button
-									disabled={isSubmitting}
-									type="submit"
-									variant="primary"
-								>
-									{isSubmitting
-										? "Creating account..."
-										: "Create Account"}
+								<Button disabled={isSubmitting} type="submit" variant="primary">
+									{isSubmitting ? "Creating account..." : "Create Account"}
 								</Button>
 							</Form>
 
@@ -126,7 +131,7 @@ const SignupPage = () => {
 				</Col>
 			</Row>
 		</Container>
-	)
-}
+	);
+};
 
 export default SignupPage;

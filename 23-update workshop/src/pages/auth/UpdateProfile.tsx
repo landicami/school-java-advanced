@@ -5,40 +5,101 @@ import Col from "react-bootstrap/Col";
 import Container from "react-bootstrap/Container";
 import Form from "react-bootstrap/Form";
 import Row from "react-bootstrap/Row";
+import Image from "react-bootstrap/Image";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
 import useAuth from "../../hooks/useAuth";
 import { UpdateProfileFormData } from "../../types/User.types";
 import { FirebaseError } from "firebase/app";
 import { toast } from "react-toastify";
+import { reload } from "firebase/auth";
 
 const UpdateProfile = () => {
 	const [isSubmitting, setIsSubmitting] = useState(false);
-	const { handleSubmit, register, watch, formState: { errors } } = useForm<UpdateProfileFormData>();
-	const { signup } = useAuth();
+
+	const {
+		signup,
+		currentUser,
+		setEmail,
+		setDisplayName,
+		setPassword,
+		setPhotoUrl,
+		reloadUser,
+		userEmail,
+		userName,
+		userPhotoUrl,
+	} = useAuth();
+
+	const {
+		handleSubmit,
+		register,
+		watch,
+		reset,
+		formState: { errors, isSubmitSuccessful },
+	} = useForm<UpdateProfileFormData>({
+		defaultValues: {
+			email: userEmail || "",
+			name: userName || "",
+			photoUrl: userPhotoUrl || "",
+		},
+	});
 	const navigate = useNavigate();
 
 	// Watch the current value of `password` form field
 	const passwordRef = useRef("");
 	passwordRef.current = watch("password");
+	console.log({ currentUser });
 
 	const onUpdateProfile: SubmitHandler<UpdateProfileFormData> = async (data) => {
-
 		// Update user profile
 		try {
 			// Disable update-button while update is in progress
 			setIsSubmitting(true);
 
 			// Update displayName *ONLY* if it has changed
+			if (data.name !== (userName ?? "")) {
+				try {
+					setDisplayName(data.name);
+					console.log("Trying to update name");
+				} catch (err) {
+					console.log(err);
+				}
+			}
+
+			// Update photoUrl *ONLY* if it has changed
+			if (data.photoUrl !== (userPhotoUrl ?? "")) {
+				try {
+					setPhotoUrl(data.photoUrl);
+					console.log("Trying to update photo");
+				} catch (err) {
+					console.log(err);
+				}
+			}
 
 			// Update email *ONLY* if it has changed
-
+			if (data.email && (userEmail ?? "")) {
+				try {
+					setEmail(data.email);
+					console.log("Trying to update email");
+				} catch (err) {
+					console.log(err);
+				}
+			}
 			// Update password *ONLY* if the user has provided a new password to set
-
-			// Reload user data
+			if (data.password) {
+				try {
+					setPassword(data.password);
+					console.log("Trying to update password");
+				} catch (err) {
+					console.log(err);
+				}
+			}
 
 			// Show success toast 🥂
+			toast.success("Updated user");
 
+			// Reload user data
+			reloadUser();
 		} catch (err) {
 			console.error("Error thrown when updating user profile:", err);
 
@@ -53,6 +114,10 @@ const UpdateProfile = () => {
 
 		// Enable update-button again
 		setIsSubmitting(false);
+	};
+
+	if (isSubmitSuccessful) {
+		reset();
 	}
 
 	return (
@@ -62,6 +127,14 @@ const UpdateProfile = () => {
 					<Card className="mb-3">
 						<Card.Body>
 							<Card.Title className="mb-3">Update Profile</Card.Title>
+							<Card.Img
+								variant="top"
+								src={
+									currentUser?.photoURL
+										? currentUser?.photoURL
+										: "https://fotbolldirekt.se/2024/06/08/har-ar-frankrikes-trupp-i-fotbolls-em-2024"
+								}
+							/>
 
 							<Form onSubmit={handleSubmit(onUpdateProfile)} className="mb-3">
 								{/*
@@ -70,40 +143,44 @@ const UpdateProfile = () => {
 								<Form.Group controlId="displayName" className="mb-3">
 									<Form.Label>Name</Form.Label>
 									<Form.Control
-										placeholder="Snel Hest"
+										placeholder={currentUser?.displayName ? currentUser?.displayName : "Name"}
 										type="text"
 										{...register("name", {
 											minLength: {
 												value: 3,
-												message: "If you have a name, it has to be at least 3 characters long"
-											}
+												message: "If you have a name, it has to be at least 3 characters long",
+											},
 										})}
 									/>
-									{errors.name && <p className="invalid">{errors.name.message || "Invalid value"}</p>}
+									{/* {errors.name && <p className="invalid">{errors.name.message || "Invalid value"}</p>} */}
 								</Form.Group>
 
 								<Form.Group controlId="photoUrl" className="mb-3">
 									<Form.Label>Photo URL</Form.Label>
 									<Form.Control
-										placeholder="https://www.chiquita.com/Bananana.jpg"
+										placeholder={currentUser?.photoURL ? currentUser?.photoURL : "PhotoURL"}
 										type="url"
 										{...register("photoUrl", {
-											required: "Please provide a valid URL",
+											// required: "Please provide a valid URL",
 										})}
 									/>
-									{errors.photoUrl && <p className="invalid">{errors.photoUrl.message || "Invalid value"}</p>}
+									{/* {errors.photoUrl && (
+										<p className="invalid">{errors.photoUrl.message || "Invalid value"}</p>
+									)} */}
 								</Form.Group>
 
 								<Form.Group controlId="email" className="mb-3">
 									<Form.Label>Email</Form.Label>
 									<Form.Control
-										placeholder="snelhest2000@horsemail.com"
+										placeholder={userEmail ? userEmail : "Email"}
 										type="email"
 										{...register("email", {
-											required: "You have to enter an email 🤦🏼‍♂️",
+											// required: "You have to enter an email 🤦🏼‍♂️",
 										})}
 									/>
-									{errors.email && <p className="invalid">{errors.email.message || "Invalid value"}</p>}
+									{/* {errors.email && (
+										<p className="invalid">{errors.email.message || "Invalid value"}</p>
+									)} */}
 								</Form.Group>
 
 								<Form.Group controlId="password" className="mb-3">
@@ -112,14 +189,16 @@ const UpdateProfile = () => {
 										type="password"
 										autoComplete="new-password"
 										{...register("password", {
-											required: "You're kidding, right? Enter a password, stupid",
+											// required: "You're kidding, right? Enter a password, stupid",
 											minLength: {
 												message: "Enter at least a few characters",
 												value: 3,
-											}
+											},
 										})}
 									/>
-									{errors.password && <p className="invalid">{errors.password.message || "Invalid value"}</p>}
+									{/* {errors.password && (
+										<p className="invalid">{errors.password.message || "Invalid value"}</p>
+									)} */}
 									<Form.Text>At least 6 characters</Form.Text>
 								</Form.Group>
 
@@ -129,27 +208,23 @@ const UpdateProfile = () => {
 										type="password"
 										autoComplete="off"
 										{...register("confirmPassword", {
-											required: "Enter your password again......",
+											// required: "Enter your password again......",
 											minLength: {
 												message: "Enter at least a few characters",
 												value: 3,
 											},
-											validate: (value) => {
-												return value === passwordRef.current || "The passwords do not match 🤦🏼‍♂️";
-											}
+											// validate: (value) => {
+											// 	return value === passwordRef.current || "The passwords do not match 🤦🏼‍♂️";
+											// },
 										})}
 									/>
-									{errors.confirmPassword && <p className="invalid">{errors.confirmPassword.message || "Invalid value"}</p>}
+									{/* {errors.confirmPassword && (
+										<p className="invalid">{errors.confirmPassword.message || "Invalid value"}</p>
+									)} */}
 								</Form.Group>
 
-								<Button
-									disabled={isSubmitting}
-									type="submit"
-									variant="primary"
-								>
-									{isSubmitting
-										? "Updating profile..."
-										: "Save"}
+								<Button disabled={isSubmitting} type="submit" variant="primary">
+									{isSubmitting ? "Updating profile..." : "Save"}
 								</Button>
 							</Form>
 						</Card.Body>
@@ -157,7 +232,7 @@ const UpdateProfile = () => {
 				</Col>
 			</Row>
 		</Container>
-	)
-}
+	);
+};
 
 export default UpdateProfile;

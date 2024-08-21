@@ -7,16 +7,15 @@ import TodoForm from "../components/TodoForm";
 import useGetTodo from "../hooks/useGetTodo";
 import { todosCol } from "../services/firebase";
 import { TodoFormData } from "../types/Todo.types";
+import useAuth from "../hooks/useAuth";
 
 const EditTodoPage = () => {
 	const { id } = useParams();
 	const navigate = useNavigate();
+	const { currentUser } = useAuth();
 
 	// Get todo
-	const {
-		data: todo,
-		loading,
-	} = useGetTodo(id);
+	const { data: todo, loading } = useGetTodo(id);
 
 	// Updates the todo in Firestore
 	const updateTodo = async (data: TodoFormData) => {
@@ -43,10 +42,14 @@ const EditTodoPage = () => {
 			error: "😬 Unable to save todo",
 		});
 		*/
-	}
+	};
 
 	if (loading || !todo) {
-		return <p>Loading...</p>
+		return <p>Loading...</p>;
+	}
+
+	if (currentUser!.uid !== todo.uid) {
+		return <p>You don't have acess to this todo...</p>;
 	}
 
 	return (

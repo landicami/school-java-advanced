@@ -9,16 +9,14 @@ import useGetTodo from "../hooks/useGetTodo";
 import { deleteDoc, doc } from "firebase/firestore";
 import { todosCol } from "../services/firebase";
 import { toast } from "react-toastify";
+import useAuth from "../hooks/useAuth";
 
 const TodoPage = () => {
+	const { currentUser } = useAuth();
 	const [showDeleteModal, setShowDeleteModal] = useState(false);
 	const navigate = useNavigate();
 	const { id } = useParams();
-	const {
-		data: todo,
-		error,
-		loading,
-	} = useGetTodo(id as string);
+	const { data: todo, error, loading } = useGetTodo(id as string);
 	const location = useStatusLocation();
 
 	const handleDelete = async () => {
@@ -36,14 +34,18 @@ const TodoPage = () => {
 		navigate("/todos", {
 			replace: true,
 		});
-	}
+	};
 
 	if (error) {
-		return <p>Ooops, bad stuff happend. Try again later?</p>
+		return <p>Ooops, bad stuff happend. Try again later?</p>;
 	}
 
 	if (loading || !todo) {
-		return <p>Loading...</p>
+		return <p>Loading...</p>;
+	}
+
+	if (currentUser!.uid !== todo.uid) {
+		return <p>You don't have acess to this todo...</p>;
 	}
 
 	return (
