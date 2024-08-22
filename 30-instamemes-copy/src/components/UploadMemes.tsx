@@ -4,16 +4,28 @@ import { useDropzone } from "react-dropzone";
 import imgDrop from "../assets/images/sad-kitten.gif";
 import { clsx } from "clsx";
 import { toast } from "react-toastify";
+import useUploadMeme from "../hooks/useUploadMeme";
+import ProgressBar from "react-bootstrap/ProgressBar";
+import Alert from "react-bootstrap/Alert";
 
 const UploadMemes = () => {
-	//const { uploadMeme} = useUploadMeme();
-	const onDrop = useCallback((acceptedFiles: File[]) => {
-		if (!acceptedFiles.length) {
-			toast.warning("Don't add that!");
-			return;
-		}
-		console.log(acceptedFiles);
-	}, []);
+	const uploadMeme = useUploadMeme();
+
+	// Drop it like it's hawt 🔥
+	const onDrop = useCallback(
+		(acceptedFiles: File[]) => {
+			if (!acceptedFiles.length) {
+				toast.warning("Y U DO STUFF LIKE DAT?!");
+				return;
+			}
+
+			console.log("Yummm, file:", acceptedFiles[0]);
+
+			// trigger upload of the dropped meme
+			uploadMeme.upload(acceptedFiles[0]);
+		},
+		[uploadMeme]
+	);
 
 	const { getRootProps, getInputProps, isDragActive, isDragAccept, isDragReject } = useDropzone({
 		accept: {
@@ -50,17 +62,12 @@ const UploadMemes = () => {
 			{isDragAccept && <p>That's workis</p>}
 
 			{/* Upload Progress Bar */}
-			{/* {uploadMeme.progress !== null && (
-			<ProgressBar
-				animated
-				label={`${uploadMeme.progress}%`}
-				now={uploadMeme.progress}
-				variant="success"
-			/>
-		)}
+			{uploadMeme.progress !== null && (
+				<ProgressBar animated label={`${uploadMeme.progress}%`} now={uploadMeme.progress} variant="success" />
+			)}
 
-		{uploadMeme.isError && <Alert variant="danger">😳 {uploadMeme.error}</Alert>}
-		{uploadMeme.isSuccess && <Alert variant="success">😂 that was a funny meme!</Alert>} */}
+			{uploadMeme.isError && <Alert variant="danger">😳 {uploadMeme.error}</Alert>}
+			{uploadMeme.isSuccess && <Alert variant="success">😂 that was a funny meme!</Alert>}
 		</div>
 	);
 };
