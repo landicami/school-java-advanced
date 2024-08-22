@@ -16,3 +16,11 @@ export type TodoFormData = {
 	completed: boolean;
 	uid: string;
 };
+
+export type UpdateProfileFormData = {
+	name: string;
+	photoFiles: string;
+	email: string;
+	password: string;
+	confirmPassword: string;
+};

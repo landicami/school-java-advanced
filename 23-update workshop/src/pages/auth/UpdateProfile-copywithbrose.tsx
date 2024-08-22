@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Button from "react-bootstrap/Button";
 import Card from "react-bootstrap/Card";
 import Col from "react-bootstrap/Col";
@@ -13,8 +13,11 @@ import { UpdateProfileFormData } from "../../types/User.types";
 import { FirebaseError } from "firebase/app";
 import { toast } from "react-toastify";
 import { reload } from "firebase/auth";
+import { storage } from "../../services/firebase";
+import { getDownloadURL, ref, uploadBytes, uploadBytesResumable } from "firebase/storage";
+import ProgressBar from "react-bootstrap/ProgressBar";
 
-const UpdateProfile = () => {
+const UpdateProfilewBrowse = () => {
 	const [isSubmitting, setIsSubmitting] = useState(false);
 
 	const {
@@ -30,25 +33,24 @@ const UpdateProfile = () => {
 		userPhotoUrl,
 	} = useAuth();
 
-	const {
-		handleSubmit,
-		register,
-		watch,
-		reset,
-		formState: { errors, isSubmitSuccessful },
-	} = useForm<UpdateProfileFormData>({
+	const { handleSubmit, register, watch, reset, resetField } = useForm<UpdateProfileFormData>({
 		defaultValues: {
-			email: userEmail || "",
-			name: userName || "",
-			photoUrl: userPhotoUrl || "",
+			// email: userEmail || "",
+			// name: userName || "",
 		},
 	});
 	const navigate = useNavigate();
+	const [photoValues, setPhotoValues] = useState<File | null>(null);
+	const [uploadProgress, setUploadProgess] = useState<number | null>(null);
 
 	// Watch the current value of `password` form field
 	const passwordRef = useRef("");
 	passwordRef.current = watch("password");
 	console.log({ currentUser });
+
+	// Watch the current value of `photoFiles` form field
+	const photoFilesRef = useRef<FileList | null>(null);
+	photoFilesRef.current = watch("photoFiles");
 
 	const onUpdateProfile: SubmitHandler<UpdateProfileFormData> = async (data) => {
 		// Update user profile
@@ -66,13 +68,64 @@ const UpdateProfile = () => {
 				}
 			}
 
-			// Update photoUrl *ONLY* if it has changed
-			if (data.photoUrl !== (userPhotoUrl ?? "")) {
+			// // Update photoUrl *ONLY* if it has changed
+			// if (data.photoFiles !== (userPhotoUrl ?? "")) {
+			// 	try {
+			// 		setPhotoUrl(data.photoFiles);
+			// 		console.log("Trying to update photo");
+			// 	} catch (err) {
+			// 		console.log(err);
+			// 	}
+			// }
+			console.log("this is photofiles", data.photoFiles);
+
+			if (data.photoFiles.length && data.photoFiles.length) {
+				const photo = data.photoFiles[0];
+				console.log(photo);
+				setPhotoValues(photo);
+
+				const fileRef = ref(storage, `photos/${currentUser!.uid}/${photo.name}`);
+
 				try {
-					setPhotoUrl(data.photoUrl);
-					console.log("Trying to update photo");
+					const uloadresult = await uploadBytes(fileRef, photo);
+					console.log("file uploaded");
+					const photoURL = await getDownloadURL(uloadresult.ref);
+					const uploadTask = uploadBytesResumable(fileRef, photo);
+					uploadTask.on(
+						"state_changed",
+						(snapshot) => {
+							// Observe state change events such as progress, pause, and resume
+							// Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
+							const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+							const percentage =
+								Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 1000) / 10;
+							setUploadProgess(percentage);
+							console.log("Upload is " + progress + "% done");
+							switch (snapshot.state) {
+								case "paused":
+									console.log("Upload is paused");
+									break;
+								case "running":
+									console.log("Upload is running");
+									break;
+							}
+						},
+						(error) => {
+							// Handle unsuccessful uploads
+						},
+						() => {
+							// Handle successful uploads on complete
+							// For instance, get the download URL: https://firebasestorage.googleapis.com/...
+							getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+								toast.success(`File available at", ${downloadURL}`);
+							});
+						}
+					);
+
+					setPhotoUrl(photoURL);
 				} catch (err) {
-					console.log(err);
+					console.error("Upload failed");
+					toast.error("Upload failed");
 				}
 			}
 
@@ -100,6 +153,8 @@ const UpdateProfile = () => {
 
 			// Reload user data
 			reloadUser();
+
+			reset();
 		} catch (err) {
 			console.error("Error thrown when updating user profile:", err);
 
@@ -114,11 +169,13 @@ const UpdateProfile = () => {
 
 		// Enable update-button again
 		setIsSubmitting(false);
+		setPhotoValues(null);
+		setUploadProgess(null);
 	};
 
-	if (isSubmitSuccessful) {
-		reset();
-	}
+	const handleDelete = () => {
+		resetField("photoFiles");
+	};
 
 	return (
 		<Container className="py-3 center-y">
@@ -136,6 +193,9 @@ const UpdateProfile = () => {
 										: "https://fotbolldirekt.se/2024/06/08/har-ar-frankrikes-trupp-i-fotbolls-em-2024"
 								}
 							/>
+							<Button size="sm" onClick={() => setPhotoUrl("")}>
+								Delete pic
+							</Button>
 
 							<Form onSubmit={handleSubmit(onUpdateProfile)} className="mb-3">
 								{/*
@@ -144,7 +204,7 @@ const UpdateProfile = () => {
 								<Form.Group controlId="displayName" className="mb-3">
 									<Form.Label>Name</Form.Label>
 									<Form.Control
-										placeholder={currentUser?.displayName ? currentUser?.displayName : "Name"}
+										placeholder={userName ? userName : ""}
 										type="text"
 										{...register("name", {
 											minLength: {
@@ -156,15 +216,42 @@ const UpdateProfile = () => {
 									{/* {errors.name && <p className="invalid">{errors.name.message || "Invalid value"}</p>} */}
 								</Form.Group>
 
-								<Form.Group controlId="photoUrl" className="mb-3">
-									<Form.Label>Photo URL</Form.Label>
+								<Form.Group controlId="photoFiles" className="mb-3">
+									<Form.Label>Browse photo</Form.Label>
 									<Form.Control
-										placeholder={currentUser?.photoURL ? currentUser?.photoURL : "PhotoURL"}
-										type="url"
-										{...register("photoUrl", {
+										type="file"
+										accept="image/gif,image/jpeg,image/png,image/webp"
+										{...register("photoFiles", {
 											// required: "Please provide a valid URL",
 										})}
 									/>
+									{/* <span className="mt-2">
+										{photoValues && (
+											<>
+												{photoValues.name} and {Math.floor(photoValues.size / 1024)} kb
+											</>
+										)}
+									</span> */}
+									<Form.Text>
+										{photoFilesRef.current && photoFilesRef.current.length > 0 && (
+											<span>
+												{photoFilesRef.current[0].name} ({photoFilesRef.current[0].size} bytes)
+											</span>
+										)}
+
+										{uploadProgress && (
+											<>
+												{uploadProgress}% uploaded
+												<ProgressBar
+													variant={uploadProgress < 100 ? "info" : "success"}
+													now={uploadProgress}
+												/>
+											</>
+										)}
+									</Form.Text>
+									<Button onClick={handleDelete} className="mt-2">
+										Delete chosen file
+									</Button>
 									{/* {errors.photoUrl && (
 										<p className="invalid">{errors.photoUrl.message || "Invalid value"}</p>
 									)} */}
@@ -236,4 +323,4 @@ const UpdateProfile = () => {
 	);
 };
 
-export default UpdateProfile;
+export default UpdateProfilewBrowse;

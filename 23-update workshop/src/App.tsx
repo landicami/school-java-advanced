@@ -13,6 +13,7 @@ import NotFoundPage from "./pages/NotFoundPage";
 import TodosPage from "./pages/TodosPage";
 import TodoPage from "./pages/TodoPage";
 import "./assets/scss/App.scss";
+import UpdateProfilewBrowse from "./pages/auth/UpdateProfile-copywithbrose";
 
 function App() {
 	return (
@@ -34,7 +35,7 @@ function App() {
 					<Route path="/todos" element={<TodosPage />} />
 					<Route path="/todos/:id" element={<TodoPage />} />
 					<Route path="/todos/:id/edit" element={<EditTodoPage />} />
-					<Route path="/update-profile" element={<UpdateProfile />} />
+					<Route path="/update-profile" element={<UpdateProfilewBrowse />} />
 				</Route>
 			</Routes>
 
@@ -43,13 +44,13 @@ function App() {
 				// autoClose={3000}  // close automatically after 3 seconds instead of the default 5 seconds
 				// autoClose={false}  // don't close automatically
 				// pauseOnFocusLoss={false}  // continue autoclose even if window isn't in focus
-				closeOnClick  // close on click (duh)
+				closeOnClick // close on click (duh)
 				theme="colored"
 				limit={5}
 				stacked
 			/>
 		</div>
-	)
+	);
 }
 
 export default App;

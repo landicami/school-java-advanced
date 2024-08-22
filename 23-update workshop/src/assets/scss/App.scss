@@ -4,7 +4,12 @@
 // make react-toastify more bootstrapp-y
 @import "toastify";
 
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
 	margin-bottom: 0.75em;
 }
 
@@ -18,7 +23,7 @@ h1, h2, h3, h4, h5, h6 {
 	position: fixed;
 	top: 4.5rem;
 	right: 4.5rem;
-	z-index: 1;  // nobody puts pacman behind listgroup
+	z-index: 1; // nobody puts pacman behind listgroup
 }
 
 #initial-loader {
@@ -26,6 +31,11 @@ h1, h2, h3, h4, h5, h6 {
 	display: flex;
 	justify-content: center;
 	min-height: 100vh;
+}
+
+.img-sq {
+	object-fit: cover;
+	aspect-ratio: 1;
 }
 
 .center-y {

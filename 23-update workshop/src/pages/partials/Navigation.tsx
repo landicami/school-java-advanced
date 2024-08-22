@@ -32,11 +32,11 @@ const Navigation = () => {
 											{currentUser.photoURL && (
 												<Image
 													src={currentUser.photoURL}
-													alt="profile"
+													alt="profile-picture"
 													roundedCircle
 													width="20"
 													height="25"
-													className="me-2"
+													className="me-2 img-sq"
 												/>
 											)}
 											{currentUser.displayName ? currentUser.displayName : userEmail}
