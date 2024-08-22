@@ -2,13 +2,19 @@ import { useCallback } from "react";
 import Image from "react-bootstrap/Image";
 import { useDropzone } from "react-dropzone";
 import imgDrop from "../assets/images/sad-kitten.gif";
+import { clsx } from "clsx";
+import { toast } from "react-toastify";
 
 const UploadMemes = () => {
 	const onDrop = useCallback((acceptedFiles: File[]) => {
+		if (!acceptedFiles.length) {
+			toast.warning("Don't add that!");
+			return;
+		}
 		console.log(acceptedFiles);
 	}, []);
 
-	const { getRootProps, getInputProps, isDragActive } = useDropzone({
+	const { getRootProps, getInputProps, isDragActive, isDragAccept, isDragReject } = useDropzone({
 		accept: {
 			"image/png": [],
 			"image/jpeg": [],
@@ -20,19 +26,27 @@ const UploadMemes = () => {
 		onDrop,
 	});
 
+	const dropzoneWrapperClasses = clsx({
+		"drag-accept": isDragAccept,
+		"drag-reject": isDragReject,
+	});
+
 	return (
-		<div {...getRootProps()} id="dropzone-wrapper">
+		<div {...getRootProps()} id="dropzone-wrapper" className={dropzoneWrapperClasses}>
 			<input {...getInputProps()} />
 			{isDragActive ? (
-				<div className="border drag">
-					<p className="m-5">Drop the files here ...</p>
-					<Image fluid src={imgDrop} title="Drop it like its hot" />
+				<div className="">
+					{/* <Image fluid src={imgDrop} title="Drop it like its hot" /> */}
+					<p>Drop your files here</p>
 				</div>
 			) : (
-				<div className="border drag">
+				<div className="">
 					<p className="m-5">Drag 'n' drop some files here, or click to select files!</p>
 				</div>
 			)}
+
+			{isDragReject && <p>Please choose another file that is jpeg, gif, osv</p>}
+			{isDragAccept && <p>That's workis</p>}
 		</div>
 	);
 };

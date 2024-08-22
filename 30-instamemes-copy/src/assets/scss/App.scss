@@ -52,26 +52,24 @@ h6 {
 }
 
 #dropzone-wrapper {
-	background-color: grey;
-	border-radius: 20px;
-	border: dashed;
-}
-
-.drag {
 	cursor: pointer;
-	border-radius: 20px;
-
+	background-color: #444;
 	text-align: center;
-}
+	margin-top: 1rem;
+	margin-bottom: 1rem;
+	padding: 2rem 1.25rem;
+	border-radius: 4px;
+	border: 2px dashed #ccc;
 
-.drag-accept {
-	background-color: #d4edda;
-	border-color: #c3e6cb;
-	color: #155724;
-}
+	&.drag-accept {
+		background-color: #d4edda;
+		border-color: #c3e6cb;
+		color: #155724;
+	}
 
-.drag-reject {
-	background-color: #f8d7da;
-	border-color: #f5c6cb;
-	color: #721c24;
+	&.drag-reject {
+		background-color: #f43747;
+		border-color: #f5c6cb;
+		color: #f9f9f9;
+	}
 }
