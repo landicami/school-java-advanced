@@ -27,7 +27,12 @@ const UpdateProfile = () => {
 		userName,
 		userPhotoUrl,
 	} = useAuth();
-	const { handleSubmit, register, watch, formState: { errors } } = useForm<UpdateProfileFormData>({
+	const {
+		handleSubmit,
+		register,
+		watch,
+		formState: { errors },
+	} = useForm<UpdateProfileFormData>({
 		defaultValues: {
 			email: userEmail ?? "",
 			name: userName ?? "",
@@ -57,7 +62,7 @@ const UpdateProfile = () => {
 
 				// create a reference to upload the file to
 				// example: "photos/Wa0uTpQsUyg4n9bkaZH8pN8Fj2C3/snel-hest.jpg"
-				const fileRef = ref(storage, `photos/${currentUser?.uid}/${photo.name}`);
+				const fileRef = ref(storage, `users/${currentUser?.uid}/${photo.name}`);
 
 				try {
 					// upload photo to fileRef
@@ -70,7 +75,6 @@ const UpdateProfile = () => {
 
 					// set download url as the user's photoUrl
 					await setPhotoUrl(photoUrl);
-
 				} catch (err) {
 					console.error("Upload failed!", err);
 					toast.error("Upload failed 🥺!");
@@ -95,7 +99,6 @@ const UpdateProfile = () => {
 			// Show success toast 🥂
 			toast.success("Profile successfully updated");
 			console.log("All ok 👍🏻👍🏻👍🏻");
-
 		} catch (err) {
 			console.error("Error thrown when updating user profile:", err);
 
@@ -110,7 +113,7 @@ const UpdateProfile = () => {
 
 		// Enable update-button again
 		setIsSubmitting(false);
-	}
+	};
 
 	return (
 		<Container className="py-3 center-y">
@@ -123,7 +126,10 @@ const UpdateProfile = () => {
 							<div className="profile-photo-wrapper text-center my-3">
 								<div className="d-flex justify-content-center mb-2">
 									<Image
-										src={userPhotoUrl || "https://via.placeholder.com/500?text=Y%20U%20NO%20PHOTO%20HAS"}
+										src={
+											userPhotoUrl ||
+											"https://via.placeholder.com/500?text=Y%20U%20NO%20PHOTO%20HAS"
+										}
 										fluid
 										roundedCircle
 										className="img-square w-75"
@@ -144,8 +150,8 @@ const UpdateProfile = () => {
 										{...register("name", {
 											minLength: {
 												value: 3,
-												message: "If you have a name, it has to be at least 3 characters long"
-											}
+												message: "If you have a name, it has to be at least 3 characters long",
+											},
 										})}
 									/>
 									{errors.name && <p className="invalid">{errors.name.message || "Invalid value"}</p>}
@@ -158,7 +164,9 @@ const UpdateProfile = () => {
 										type="file"
 										{...register("photoFiles")}
 									/>
-									{errors.photoFiles && <p className="invalid">{errors.photoFiles.message || "Invalid value"}</p>}
+									{errors.photoFiles && (
+										<p className="invalid">{errors.photoFiles.message || "Invalid value"}</p>
+									)}
 								</Form.Group>
 
 								<Form.Group controlId="email" className="mb-3">
@@ -170,7 +178,9 @@ const UpdateProfile = () => {
 											required: "You have to enter an email 🤦🏼‍♂️",
 										})}
 									/>
-									{errors.email && <p className="invalid">{errors.email.message || "Invalid value"}</p>}
+									{errors.email && (
+										<p className="invalid">{errors.email.message || "Invalid value"}</p>
+									)}
 								</Form.Group>
 
 								<Form.Group controlId="password" className="mb-3">
@@ -182,10 +192,12 @@ const UpdateProfile = () => {
 											minLength: {
 												message: "Enter at least a few characters",
 												value: 3,
-											}
+											},
 										})}
 									/>
-									{errors.password && <p className="invalid">{errors.password.message || "Invalid value"}</p>}
+									{errors.password && (
+										<p className="invalid">{errors.password.message || "Invalid value"}</p>
+									)}
 									<Form.Text>At least 6 characters</Form.Text>
 								</Form.Group>
 
@@ -200,21 +212,21 @@ const UpdateProfile = () => {
 												value: 3,
 											},
 											validate: (value) => {
-												return !passwordRef.current || value === passwordRef.current || "The passwords do not match 🤦🏼‍♂️";
-											}
+												return (
+													!passwordRef.current ||
+													value === passwordRef.current ||
+													"The passwords do not match 🤦🏼‍♂️"
+												);
+											},
 										})}
 									/>
-									{errors.confirmPassword && <p className="invalid">{errors.confirmPassword.message || "Invalid value"}</p>}
+									{errors.confirmPassword && (
+										<p className="invalid">{errors.confirmPassword.message || "Invalid value"}</p>
+									)}
 								</Form.Group>
 
-								<Button
-									disabled={isSubmitting}
-									type="submit"
-									variant="primary"
-								>
-									{isSubmitting
-										? "Updating profile..."
-										: "Save"}
+								<Button disabled={isSubmitting} type="submit" variant="primary">
+									{isSubmitting ? "Updating profile..." : "Save"}
 								</Button>
 							</Form>
 						</Card.Body>
@@ -222,7 +234,7 @@ const UpdateProfile = () => {
 				</Col>
 			</Row>
 		</Container>
-	)
-}
+	);
+};
 
 export default UpdateProfile;

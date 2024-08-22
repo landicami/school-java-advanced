@@ -6,6 +6,7 @@ import { clsx } from "clsx";
 import { toast } from "react-toastify";
 
 const UploadMemes = () => {
+	//const { uploadMeme} = useUploadMeme();
 	const onDrop = useCallback((acceptedFiles: File[]) => {
 		if (!acceptedFiles.length) {
 			toast.warning("Don't add that!");
@@ -47,6 +48,19 @@ const UploadMemes = () => {
 
 			{isDragReject && <p>Please choose another file that is jpeg, gif, osv</p>}
 			{isDragAccept && <p>That's workis</p>}
+
+			{/* Upload Progress Bar */}
+			{/* {uploadMeme.progress !== null && (
+			<ProgressBar
+				animated
+				label={`${uploadMeme.progress}%`}
+				now={uploadMeme.progress}
+				variant="success"
+			/>
+		)}
+
+		{uploadMeme.isError && <Alert variant="danger">😳 {uploadMeme.error}</Alert>}
+		{uploadMeme.isSuccess && <Alert variant="success">😂 that was a funny meme!</Alert>} */}
 		</div>
 	);
 };

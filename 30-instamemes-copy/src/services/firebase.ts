@@ -2,6 +2,7 @@ import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 import { getStorage } from "firebase/storage";
 import { CollectionReference, DocumentData, collection, getFirestore } from "firebase/firestore";
+import { Meme } from "../types/Meme.types";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -33,5 +34,6 @@ const createCollection = <T = DocumentData>(collectionName: string) => {
 // Our collection references
 // export const todosCol = createCollection<Todo>("todos");
 // export const newTodosCol = createCollection<NewTodo>("todos");
+export const memesCol = createCollection<Meme>("memes");
 
 export default app;
