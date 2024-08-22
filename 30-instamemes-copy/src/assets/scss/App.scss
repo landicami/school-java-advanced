@@ -4,7 +4,12 @@
 // make react-toastify more bootstrapp-y
 @import "toastify";
 
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
 	margin-bottom: 0.75em;
 }
 
@@ -18,7 +23,7 @@ h1, h2, h3, h4, h5, h6 {
 	position: fixed;
 	top: 4.5rem;
 	right: 4.5rem;
-	z-index: 1;  // nobody puts pacman behind listgroup
+	z-index: 1; // nobody puts pacman behind listgroup
 }
 
 #initial-loader {
@@ -44,4 +49,29 @@ h1, h2, h3, h4, h5, h6 {
 	.modal-title {
 		margin-bottom: 0;
 	}
+}
+
+#dropzone-wrapper {
+	background-color: grey;
+	border-radius: 20px;
+	border: dashed;
+}
+
+.drag {
+	cursor: pointer;
+	border-radius: 20px;
+
+	text-align: center;
+}
+
+.drag-accept {
+	background-color: #d4edda;
+	border-color: #c3e6cb;
+	color: #155724;
+}
+
+.drag-reject {
+	background-color: #f8d7da;
+	border-color: #f5c6cb;
+	color: #721c24;
 }

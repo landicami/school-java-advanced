@@ -24,26 +24,26 @@ function App() {
 				<Route path="/login" element={<LoginPage />} />
 				<Route path="/logout" element={<LogoutPage />} />
 				<Route path="/signup" element={<SignupPage />} />
+				<Route path="/" element={<HomePage />} />
 
 				{/* Protected Routes */}
 				<Route element={<ProtectedRoutes />}>
-					<Route path="/" element={<HomePage />} />
 					<Route path="/update-profile" element={<UpdateProfile />} />
 				</Route>
 			</Routes>
 
 			<ToastContainer
 				// position="bottom-right"
-				// autoClose={3000}  // close automatically after 3 seconds instead of the default 5 seconds
+				autoClose={1000} // close automatically after 3 seconds instead of the default 5 seconds
 				// autoClose={false}  // don't close automatically
 				// pauseOnFocusLoss={false}  // continue autoclose even if window isn't in focus
-				closeOnClick  // close on click (duh)
+				closeOnClick // close on click (duh)
 				theme="colored"
 				limit={5}
 				stacked
 			/>
 		</div>
-	)
+	);
 }
 
 export default App;
