@@ -9,6 +9,14 @@ const UploadMemes = () => {
 	}, []);
 
 	const { getRootProps, getInputProps, isDragActive } = useDropzone({
+		accept: {
+			"image/png": [],
+			"image/jpeg": [],
+			"image/gif": [],
+			"image/webp": [],
+		},
+		maxFiles: 1,
+		maxSize: 4 * 1024 * 1024, // 4 mb
 		onDrop,
 	});
 
