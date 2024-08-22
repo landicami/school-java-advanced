@@ -1,0 +1,47 @@
+@import "bootstrap/scss/bootstrap";
+@import "react-toastify/scss/main";
+
+// make react-toastify more bootstrapp-y
+@import "toastify";
+
+h1, h2, h3, h4, h5, h6 {
+	margin-bottom: 0.75em;
+}
+
+#App {
+	display: flex;
+	flex-direction: column;
+	min-height: 100vh;
+}
+
+#global-loading-spinner-wrapper {
+	position: fixed;
+	top: 4.5rem;
+	right: 4.5rem;
+	z-index: 1;  // nobody puts pacman behind listgroup
+}
+
+#initial-loader {
+	align-items: center;
+	display: flex;
+	justify-content: center;
+	min-height: 100vh;
+}
+
+.center-y {
+	display: flex;
+	flex-direction: column;
+	flex-grow: 1;
+	justify-content: center;
+}
+
+.img-square {
+	aspect-ratio: 1;
+	object-fit: cover;
+}
+
+.modal {
+	.modal-title {
+		margin-bottom: 0;
+	}
+}
