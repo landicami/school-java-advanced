@@ -1,14 +1,17 @@
 import Container from "react-bootstrap/Container";
 import AccountButtons from "./AccountButtons";
+import { useAppSelector } from "../../app/hooks";
 
 const AccountPage = () => {
+	const accountState = useAppSelector((state) => state.account);
+
 	return (
 		<Container className="py-3">
 			<h1>Account</h1>
 
 			<div className="text-center my-5">
 				<p className="h3">Balance</p>
-				<code className="display-4">$ 0</code>
+				<code className="display-4">$ {accountState.balance}</code>
 			</div>
 
 			<div className="d-flex justify-content-around">
@@ -23,7 +26,7 @@ const AccountPage = () => {
 				</div>
 			</div>
 		</Container>
-	)
+	);
 };
 
 export default AccountPage;
