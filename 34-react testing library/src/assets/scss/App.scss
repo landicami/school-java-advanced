@@ -1,0 +1,54 @@
+@import "bootstrap/scss/bootstrap";
+@import "react-toastify/scss/main";
+
+// make react-toastify more bootstrapp-y
+@import "toastify";
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+	margin-bottom: 0.75em;
+}
+
+#App {
+	display: flex;
+	flex-direction: column;
+	min-height: 100vh;
+}
+
+.invalid {
+	color: $danger;
+	font-size: 0.875em;
+	margin-top: 0.25rem;
+}
+
+.todolist {
+	.list-group-item {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+
+		&.done {
+			color: $success;
+			font-style: italic;
+			text-decoration: line-through;
+		}
+	}
+}
+
+.visitor-counter {
+	display: flex;
+	gap: 4px;
+	justify-content: center;
+
+	code {
+		color: $white;
+		font-size: calc(1.475rem + 2.7vw);
+		font-weight: 300;
+		line-height: 1.2;
+		padding: 0.125em 0.25em;
+	}
+}
