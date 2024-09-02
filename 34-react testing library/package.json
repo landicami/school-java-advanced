@@ -11,7 +11,8 @@
     "check:type-coverage": "type-coverage --detail --at-least 100 --ignore-files 'test/*'",
     "check": "run-s clean && run-p check:*",
     "clean": "del-cli dist/",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "test": "vitest"
   },
   "dependencies": {
     "@reduxjs/toolkit": "^2.2.7",
@@ -28,6 +29,10 @@
     "uuid": "^10.0.0"
   },
   "devDependencies": {
+    "@testing-library/dom": "^10.4.0",
+    "@testing-library/jest-dom": "^6.5.0",
+    "@testing-library/react": "^16.0.0",
+    "@testing-library/user-event": "^14.5.2",
     "@types/node": "^20.16.1",
     "@types/react": "^18.3.4",
     "@types/react-dom": "^18.3.0",
@@ -39,9 +44,12 @@
     "eslint": "^8.57.0",
     "eslint-plugin-react-hooks": "^4.6.2",
     "eslint-plugin-react-refresh": "^0.4.10",
+    "jest-environment-jsdom": "^29.7.0",
+    "jsdom": "^25.0.0",
     "npm-run-all2": "^6.2.2",
     "type-coverage": "^2.29.1",
     "typescript": "^5.5.4",
-    "vite": "^5.4.2"
+    "vite": "^5.4.2",
+    "vitest": "^2.0.5"
   }
 }
